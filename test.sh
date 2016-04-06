@@ -96,12 +96,14 @@ while read -r clave linea; do
 #		eval "$clave+=('$linea')"
 #	fi
 	case $clave in
+		''|'#'*) ;;
 		p) p+=("$linea");;
 		a) a+=("$linea");;
 		b) b+=("$linea");;
 		c) c+=("$linea");;
 		d) d+=("$linea");;
 		s) s+=("$linea");;
+		*) echo "error in line: \"$clave $linea\""; exit 1;;
 	esac
 done < "./$pre"
 
