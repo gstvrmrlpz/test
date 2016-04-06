@@ -271,7 +271,7 @@ for (( t=0; t<$tests; ++t )); do
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
 			echo -en "\t\item " >> "./$tex"
-			echo "$respuesta" >> "./$tex"
+			echo "$respuesta \par" >> "./$tex" # \par needed for listings
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
