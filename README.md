@@ -1,5 +1,5 @@
 Uso:
-====
+----
 
 1. crear fichero de preguntas siguiendo el siguiente formato:
 
@@ -18,7 +18,7 @@ Uso:
 	latexmk -pdf preguntas.tex
 
 Opciones del script:
-====================
+--------------------
 
 	usage: test.sh -p file.pre [options]
 		 -c 	 number of columns (1|2), 1 by default
