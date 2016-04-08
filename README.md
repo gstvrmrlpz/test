@@ -15,7 +15,7 @@ Uso:
 
 	`test.sh -c 2 -p preguntas.pre -q 20 -s "Arquitectura de Computadores" -t 32`
 
-3. generar 	fichero pdf a partir de fichero latex
+3. generar fichero pdf a partir de fichero latex
 
 	`latexmk -pdf preguntas.tex`
 
