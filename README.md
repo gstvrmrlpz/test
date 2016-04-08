@@ -9,6 +9,7 @@ Uso:
 	c 3
 	d 4
 	s d
+	
 
 2. Generar latex a partir de fichero de preguntas con test.sh
 	
