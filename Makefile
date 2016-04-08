@@ -16,13 +16,13 @@ auto: $(TEX)
 	latexmk -f -pdf -pvc `ls -t $(TEX) | head -n 1`
 
 clean:
-	if [ -e $(TEX) ]; then latexmk -C; fi
+	if [ -e "$(TEX)" ]; then latexmk -C; fi
 	$(RM) $(TEX) *~
 
 ###############################################################################
 
 %.tex: %.pre $(TST) Makefile
-	$(TST) -c 2 -p $< -q 15 -s "Arquitectura de Computadores" -t 32
+	$(TST) -c 2 -i logotipos -p $< -q 15 -s "Arquitectura de Computadores" -t 32
 
 %.pdf: %.tex
 	latexmk -pdf $*
