@@ -2,7 +2,7 @@ Uso:
 ----
 
 1. crear un fichero de preguntas siguiendo el siguiente formato:
-
+>
 	p ¿Cuánto es 2 + 2?
 	a 1
 	b 2
