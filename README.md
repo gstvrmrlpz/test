@@ -17,9 +17,8 @@ Uso:
 	
 
 3. generar 	fichero pdf a partir de fichero latex
-	
 	`latexmk -pdf preguntas.tex`
-	
+
 
 Opciones del script:
 --------------------
