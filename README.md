@@ -12,11 +12,9 @@ Uso:
 ```
 
 2. generar fichero latex a partir de fichero de preguntas con test.sh
-
 	`test.sh -c 2 -p preguntas.pre -q 20 -s "Arquitectura de Computadores" -t 32`
 
 3. generar fichero pdf a partir de fichero latex
-
 	`latexmk -pdf preguntas.tex`
 
 
