@@ -1,7 +1,7 @@
 Uso:
 ----
 
-1. crear un fichero de preguntas con el siguiente formato:
+1. crear un fichero de preguntas, `preguntas.pre`, con el siguiente formato:
 ```
 	p ¿Cuánto es 2 + 2?
 	a 1
