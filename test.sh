@@ -88,28 +88,26 @@ name=${tex/.tex}
 name=${name^^}
 
 ###############################################################################
-# read *.pre
+# read *.pre and check for errors
 ###############################################################################
 
+linenumber=1
 while read -r clave linea; do
 #	if [ "$clave" ] && [ "${clave:0:1}" != "%" ]; then
 #		eval "$clave+=('$linea')"
 #	fi
 	case $clave in
-		''|'#'*) ;;
+		''|'#'*|'%'*) ;;  # comments with # and %
 		p) p+=("$linea");;
 		a) a+=("$linea");;
 		b) b+=("$linea");;
 		c) c+=("$linea");;
 		d) d+=("$linea");;
 		s) s+=("$linea");;
-		*) echo "error in line: \"$clave $linea\""; exit 1;;
+		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
+	(( ++linenumber ));
 done < "./$pre"
-
-if (( ${#p[@]} < questions )); then
-	questions=${#p[@]}
-fi
 
 if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${#d[@]} != ${#p[@]} || ${#s[@]} != ${#p[@]} )); then
 	echo "$(basename $0): number of p, a, b, c, d, s mismatch!!!";
@@ -120,6 +118,10 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 	echo -e "\t \${#d[@]} = ${#d[@]}"
 	echo -e "\t \${#s[@]} = ${#s[@]}"
 	exit 1;
+fi
+
+if (( ${#p[@]} < questions )); then
+	questions=${#p[@]}
 fi
 
 ###############################################################################
