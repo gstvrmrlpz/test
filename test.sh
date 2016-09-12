@@ -371,6 +371,7 @@ done
 #echo '\end{center}' >> "./$tex"
 #echo >> "./$tex"
 #echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+#echo '\clearpage' >> "./$tex"
 ###############################################################################
 
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
@@ -384,10 +385,11 @@ for (( t = 0; t < tests; ++t )); do
 	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
 	echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
 	echo '\hline' >> "./$tex"
-	for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
-		for (( j = maxq; j < maxq + MAXQ ; ++j )); do
-			if (( j <= questions )); then
-				echo -n $j >> "./$tex"
+	all=${sol[$t]}
+	for (( maxq = 0; maxq < questions; maxq += MAXQ )); do
+		for (( j = maxq; j < maxq + MAXQ; ++j )); do
+			if (( j < questions )); then
+				echo -n $((j + 1)) >> "./$tex"
 			else
 				echo -n >> "./$tex"
 			fi
@@ -397,14 +399,13 @@ for (( t = 0; t < tests; ++t )); do
 		done
 		echo '\\' >> "./$tex"
 		echo '\hline' >> "./$tex"
-		all=${sol[$t]}
 		for (( j = maxq; j < maxq + MAXQ; ++j )); do
-			if (( j <= questions )); then
-				echo -n ${all:$((4 * (j - 1))):1} >> "./$tex"
+			if (( j < questions)); then
+				echo -n ${all:$((4 * j)):1} >> "./$tex"
 			else
 				echo -n >> "./$tex"
 			fi
-			if (( j < maxq + MAXQ - 1 )); then
+			if (( j < maxq + MAXQ - 1)); then
 				echo -n ' & ' >> "./$tex"
 			fi
 		done
