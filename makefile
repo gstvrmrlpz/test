@@ -1,11 +1,12 @@
 ###############################################################################
-# Makefile
+# makefile
 ###############################################################################
 
 PRE = $(wildcard *.pre)
 TEX = $(PRE:.pre=.tex)
 PDF = $(TEX:.tex=.pdf)
-TST = $(shell which test.sh)
+#TST = $(shell which test.sh)
+TST = ./test.sh
 
 ###############################################################################
 
@@ -21,8 +22,8 @@ clean:
 
 ###############################################################################
 
-%.tex: %.pre $(TST) Makefile
-	$(TST) -c 2 -i logotipos -p $< -q 15 -s "Arquitectura de Computadores" -t 32
+%.tex: %.pre $(TST) makefile
+	$(TST) -c 2 -i logotipos -p $< -q 75 -s "Arquitectura de Computadores" -t 3
 
 %.pdf: %.tex
 	latexmk -pdf $*

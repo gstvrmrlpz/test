@@ -2,11 +2,12 @@
 
 ###############################################################################
 
-answer='5.0' # width of answer column
+answer='5.0' # width of answer column in mm
 cols=1       # number of columns
 date=`date  '+%d/%m/%Y'`
 empty=''
 image='/home/gustavo/docencia/logotipos'
+MAXQ=20      # test longest line in number of questions
 questions=10
 RANDOM=0
 subject=''
@@ -55,7 +56,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 	esac
 done
 
-if (( $cols > 2 )); then
+if (( cols < 0 || cols > 2 )); then
 	echo 'Only 1 or 2 columns supported!'
 	exit 1
 fi
@@ -236,26 +237,36 @@ for (( t=0; t<$tests; ++t )); do
 	echo >> "./$tex"
 	echo "\noindent Escriba la opción correcta en la tabla siguiente, dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$-10/$((3 * questions))\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
 	echo >> "./$tex"
+	echo '\begin{minipage}{0.95\textwidth}' >> "./$tex"
 	echo '\begin{center}' >> "./$tex"
 	echo '\renewcommand\arraystretch{1.50}' >> "./$tex"
-	echo "\begin{tabular}{|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
+	echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
 	echo '\hline' >> "./$tex"
-	for (( j=1; j<=$questions; ++j )); do
-		echo -n $j >> "./$tex"
-		if (( $j < $questions )); then
-			echo -n ' & ' >> "./$tex"
-		fi
+################################################################################
+	for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
+		for (( j = maxq; j < maxq + MAXQ ; ++j )); do
+			if (( j <= questions )); then
+				echo -n $j >> "./$tex"
+			else
+				echo -n >> "./$tex"
+			fi
+			if (( j < maxq + MAXQ - 1 )); then
+				echo -n ' & ' >> "./$tex"
+			fi
+		done
+		echo '\\' >> "./$tex"
+		echo '\hline' >> "./$tex"
+		for (( j = maxq; j < maxq + MAXQ - 1; ++j )); do
+			echo -n '&' >> "./$tex"
+		done
+		echo '\\' >> "./$tex"
+		echo '\hline' >> "./$tex"
 	done
-	echo '\\' >> "./$tex"
-	echo '\hline' >> "./$tex"
-	for (( j=1; j<$questions; ++j )); do
-		echo -n '&' >> "./$tex"
-	done
-	echo '\\' >> "./$tex"
-	echo '\hline' >> "./$tex"
+################################################################################
 	echo '\end{tabular}' >> "./$tex"
 	echo '\end{center}' >> "./$tex"
 	echo >> "./$tex"
+	echo '\end{minipage}' >> "./$tex"
 
 	if (( $cols == 2 )); then
 		echo "\begin{multicols}{$cols}" >> "./$tex"
@@ -334,30 +345,79 @@ for (( t=0; t<$tests; ++t )); do
 	echo >> "./$tex"
 done
 
+###############################################################################
+# soluciones originales
+###############################################################################
+#echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+#echo '% soluciones' >> "./$tex"
+#echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+#echo "{\large Tema: $name \hfill $date}" >> "./$tex"
+#echo '\begin{center}' >> "./$tex"
+#echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+#echo "\begin{tabular}{|c||*{$questions}{m{${answer}mm}|}}" >> "./$tex"
+#echo '\hline' >> "./$tex"
+#echo -n 'n' >> "./$tex"
+#for (( q=1; q<=$questions; ++q )); do
+#	echo -n " & $q" >> "./$tex"
+#done
+#echo '\\' >> "./$tex"
+#echo '\hline' >> "./$tex"
+#echo '\hline' >> "./$tex"
+#for (( t=0; t<$tests; ++t )); do
+#	echo "$t & ${sol[$t]} \\\\" >> "./$tex"
+#	echo '\hline' >> "./$tex"
+#done
+#echo '\end{tabular}' >> "./$tex"
+#echo '\end{center}' >> "./$tex"
+#echo >> "./$tex"
+#echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+###############################################################################
+
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo '% soluciones' >> "./$tex"
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo "{\large Tema: $name \hfill $date}" >> "./$tex"
-echo '\begin{center}' >> "./$tex"
-echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
-echo "\begin{tabular}{|c||*{$questions}{m{${answer}mm}|}}" >> "./$tex"
-echo '\hline' >> "./$tex"
-echo -n 'n' >> "./$tex"
-for (( q=1; q<=$questions; ++q )); do
-	echo -n " & $q" >> "./$tex"
-done
-echo '\\' >> "./$tex"
-echo '\hline' >> "./$tex"
-echo '\hline' >> "./$tex"
-for (( t=0; t<$tests; ++t )); do
-	echo "$t & ${sol[$t]} \\\\" >> "./$tex"
-	echo '\hline' >> "./$tex"
-done
-echo '\end{tabular}' >> "./$tex"
-echo '\end{center}' >> "./$tex"
 echo >> "./$tex"
+for (( t = 0; t < tests; ++t )); do
+	echo "$t" >> "./$tex"
+	echo '\begin{center}' >> "./$tex"
+	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+	echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
+	echo '\hline' >> "./$tex"
+	for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
+		for (( j = maxq; j < maxq + MAXQ ; ++j )); do
+			if (( j <= questions )); then
+				echo -n $j >> "./$tex"
+			else
+				echo -n >> "./$tex"
+			fi
+			if (( j < maxq + MAXQ - 1 )); then
+				echo -n ' & ' >> "./$tex"
+			fi
+		done
+		echo '\\' >> "./$tex"
+		echo '\hline' >> "./$tex"
+		all=${sol[$t]}
+		for (( j = maxq; j < maxq + MAXQ; ++j )); do
+			if (( j <= questions )); then
+				echo -n ${all:$((4 * (j - 1))):1} >> "./$tex"
+			else
+				echo -n >> "./$tex"
+			fi
+			if (( j < maxq + MAXQ - 1 )); then
+				echo -n ' & ' >> "./$tex"
+			fi
+		done
+		echo '\\' >> "./$tex"
+		echo '\hline' >> "./$tex"
+	done
+	echo '\end{tabular}' >> "./$tex"
+	echo '\end{center}' >> "./$tex"
+	echo >> "./$tex"
+done
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo >> "./$tex"
 echo '\end{document}' >> "./$tex"
 
 ###############################################################################
+
