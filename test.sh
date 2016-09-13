@@ -27,7 +27,6 @@ help()
 	echo -e "\t -q \t number of questions, $questions by default"
 	echo -e "\t -s \t subject, mandatory"
 	echo -e "\t -t \t number of tests, $tests by default"
-	
 	exit 1
 }
 
@@ -98,6 +97,21 @@ while read -r clave linea; do
 #	if [ "$clave" ] && [ "${clave:0:1}" != "%" ]; then
 #		eval "$clave+=('$linea')"
 #	fi
+
+	# missing line after valid key
+	if [[ -n "$clave" && -z "$linea" ]]; then
+		echo "error in line $linenumber: \"$clave $linea\""
+		exit 1
+	fi
+	
+	# wrong answer
+	if [[ "$clave" == "s" ]]; then
+		case $linea in
+			a|b|c|d);;
+			*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
+		esac
+	fi
+	
 	case $clave in
 		''|'#'*|'%'*) ;;  # comments with # and %
 		p) p+=("$linea");;
@@ -122,6 +136,7 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 	exit 1;
 fi
 
+# questions <= number of questions in test
 if (( ${#p[@]} < questions )); then
 	questions=${#p[@]}
 fi
