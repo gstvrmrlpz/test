@@ -98,8 +98,8 @@ while read -r clave linea; do
 #		eval "$clave+=('$linea')"
 #	fi
 
-	# missing line after valid key
-	if [[ -n "$clave" && -z "$linea" ]]; then
+	# missing line after valid key avoiding comments
+	if [[ -n "$clave" && -z "$linea" && "${clave:0:1}" != "#" && "${clave:0:1}" != "%" ]]; then
 		echo "error in line $linenumber: \"$clave $linea\""
 		exit 1
 	fi
@@ -122,6 +122,7 @@ while read -r clave linea; do
 		s) s+=("$linea");;
 		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
+	
 	(( ++linenumber ));
 done < "./$pre"
 
