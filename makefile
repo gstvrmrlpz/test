@@ -5,8 +5,7 @@
 PRE = $(wildcard *.pre)
 TEX = $(PRE:.pre=.tex)
 PDF = $(TEX:.tex=.pdf)
-#TST = $(shell which test.sh)
-TST = ./test.sh
+TST = $(shell which test.sh)
 
 ###############################################################################
 
@@ -17,8 +16,8 @@ auto: $(TEX)
 	latexmk -f -pdf -pvc `ls -t $(TEX) | head -n 1`
 
 clean:
-	if [ -e "$(TEX)" ]; then latexmk -C; fi
-	$(RM) $(TEX) *~
+	-if [ -e $(TEX) ]; then latexmk -C; fi
+	-$(RM) $(PDF) $(TEX) *~
 
 ###############################################################################
 
