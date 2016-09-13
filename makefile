@@ -23,7 +23,7 @@ clean:
 ###############################################################################
 
 %.tex: %.pre $(TST) makefile
-	$(TST) -c 2 -i logotipos -p $< -q 25 -s "Arquitectura de Computadores" -t 3
+	$(TST) -c 2 -i logotipos -p $< -q 100 -s "Arquitectura de Computadores" -t 3
 
 %.pdf: %.tex
 	latexmk -pdf $*

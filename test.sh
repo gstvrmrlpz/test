@@ -280,8 +280,8 @@ for (( t=0; t<$tests; ++t )); do
 ################################################################################
 	echo '\end{tabular}' >> "./$tex"
 	echo '\end{center}' >> "./$tex"
-	echo >> "./$tex"
 	echo '\end{minipage}' >> "./$tex"
+	echo >> "./$tex"
 
 	if (( $cols == 2 )); then
 		echo "\begin{multicols}{$cols}" >> "./$tex"
@@ -394,43 +394,70 @@ echo '% soluciones' >> "./$tex"
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo "{\large Tema: $name \hfill $date}" >> "./$tex"
 echo >> "./$tex"
-for (( t = 0; t < tests; ++t )); do
-	echo "$t" >> "./$tex"
+if (( questions <= MAXQ )); then
+################################################################################
+# short
+################################################################################
 	echo '\begin{center}' >> "./$tex"
 	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
-	echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
-	echo '\hline' >> "./$tex"
-	all=${sol[$t]}
-	for (( maxq = 0; maxq < questions; maxq += MAXQ )); do
-		for (( j = maxq; j < maxq + MAXQ; ++j )); do
-			if (( j < questions )); then
-				echo -n $((j + 1)) >> "./$tex"
-			else
-				echo -n >> "./$tex"
-			fi
-			if (( j < maxq + MAXQ - 1 )); then
-				echo -n ' & ' >> "./$tex"
-			fi
-		done
-		echo '\\' >> "./$tex"
-		echo '\hline' >> "./$tex"
-		for (( j = maxq; j < maxq + MAXQ; ++j )); do
-			if (( j < questions)); then
-				echo -n ${all:$((4 * j)):1} >> "./$tex"
-			else
-				echo -n >> "./$tex"
-			fi
-			if (( j < maxq + MAXQ - 1)); then
-				echo -n ' & ' >> "./$tex"
-			fi
-		done
-		echo '\\' >> "./$tex"
-		echo '\hline' >> "./$tex"
+	echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
+	echo "\cline{2-$((questions + 1))}" >> "./$tex"
+	echo -n 'n' >> "./$tex"
+	for (( q=1; q<=$questions; ++q )); do
+		echo -n " & $q" >> "./$tex"
+	done
+	echo '\\' >> "./$tex"
+	echo "\cline{2-$((questions + 1))}" >> "./$tex"
+	echo "\cline{2-$((questions + 1))}" >> "./$tex"
+	for (( t=0; t<$tests; ++t )); do
+		echo "$t & ${sol[$t]} \\\\" >> "./$tex"
+			echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	done
 	echo '\end{tabular}' >> "./$tex"
 	echo '\end{center}' >> "./$tex"
 	echo >> "./$tex"
-done
+else
+################################################################################
+# long
+################################################################################
+	for (( t = 0; t < tests; ++t )); do
+		echo "$t" >> "./$tex"
+		echo '\begin{center}' >> "./$tex"
+		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
+		echo '\hline' >> "./$tex"
+		all=${sol[$t]}
+		for (( maxq = 0; maxq < questions; maxq += MAXQ )); do
+			for (( j = maxq; j < maxq + MAXQ; ++j )); do
+				if (( j < questions )); then
+					echo -n $((j + 1)) >> "./$tex"
+				else
+					echo -n >> "./$tex"
+				fi
+				if (( j < maxq + MAXQ - 1 )); then
+					echo -n ' & ' >> "./$tex"
+				fi
+			done
+			echo '\\' >> "./$tex"
+			echo '\hline' >> "./$tex"
+			for (( j = maxq; j < maxq + MAXQ; ++j )); do
+				if (( j < questions)); then
+					echo -n ${all:$((4 * j)):1} >> "./$tex"
+				else
+					echo -n >> "./$tex"
+				fi
+				if (( j < maxq + MAXQ - 1)); then
+					echo -n ' & ' >> "./$tex"
+				fi
+			done
+			echo '\\' >> "./$tex"
+			echo '\hline' >> "./$tex"
+		done
+		echo '\end{tabular}' >> "./$tex"
+		echo '\end{center}' >> "./$tex"
+		echo >> "./$tex"
+	done
+fi
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo >> "./$tex"
 echo '\end{document}' >> "./$tex"
