@@ -7,8 +7,8 @@ cols=1       # number of columns
 date=`date  '+%d/%m/%Y'`
 empty=''
 image='/home/gustavo/docencia/logotipos'
-MAXQ=20      # test longest line in number of questions
-questions=10
+MAXQ=20      # answer longest line in number of questions
+questions=10 # number of questions
 RANDOM=0
 subject=''
 tests=1
@@ -159,7 +159,6 @@ cat > "./$tex" <<EOF
 \usepackage{amsmath}            % texto en modo matemático
 \usepackage[spanish]{babel}     % español
 \usepackage{caption}            % captionof
-\usepackage{xcolor}             % gray
 \usepackage[ddmmyyyy]{datetime} % formato fecha (\today)
 \usepackage{epsfig}             % epsfig
 \usepackage{geometry}           % geometry
@@ -167,12 +166,14 @@ cat > "./$tex" <<EOF
 \usepackage[utf8]{inputenc}     % tildes
 \usepackage{listings}           % listado de fuentes
 \usepackage{multicol}           % varias columnas
+\usepackage{xcolor}             % gray
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \geometry{margin=8mm,top=16mm,bottom=16mm}
 
 \lstset{
+	alsoletter={\%},
 	basicstyle=\ttfamily,
 	breaklines=true,
 	extendedchars=true,
@@ -190,8 +191,7 @@ cat > "./$tex" <<EOF
 	         {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
 	         {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
 	         {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-	         {ñ}{{\~{n}}}1 {Ñ}{{\~{N}}}1 {€}{{\EUR}}1 {£}{{\pounds}}1
-	         {¡}{{!`}}1 {¿}{{?`}}1,
+	         {ñ}{{\~{n}}}1 {Ñ}{{\~{N}}}1 {€}{{\EUR}}1 {£}{{\pounds}}1,
 	numberstyle=\tiny\color{gray},
 	language=C++,
 	showspaces=false,
@@ -252,34 +252,60 @@ for (( t=0; t<$tests; ++t )); do
 	echo >> "./$tex"
 	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "./$tex"
 	echo >> "./$tex"
-	echo "\noindent Escriba la opción correcta en la tabla siguiente, dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$-10/$((3 * questions))\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
+	valor1=`LANG=C printf "%.3f" $(bc -l <<< 10/$questions)`
+	valor2=`LANG=C printf "%.3f" $(bc -l <<< "10/(3*$questions)")`
+	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $valor1\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = $valor2\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
 	echo >> "./$tex"
+	echo '\vspace{1mm}' >> "./$tex"
+	echo >> "./$tex"
+
 	echo '\begin{minipage}{0.95\textwidth}' >> "./$tex"
 	echo '\begin{center}' >> "./$tex"
-	echo '\renewcommand\arraystretch{1.50}' >> "./$tex"
-	echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
-	echo '\hline' >> "./$tex"
+#	echo '\renewcommand\arraystretch{1.50}' >> "./$tex"
+	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+	if ((questions <= MAXQ)); then
 ################################################################################
-	for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
-		for (( j = maxq; j < maxq + MAXQ ; ++j )); do
-			if (( j <= questions )); then
-				echo -n $j >> "./$tex"
-			else
-				echo -n >> "./$tex"
-			fi
-			if (( j < maxq + MAXQ - 1 )); then
+		echo "\begin{tabular}{|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
+		echo '\hline' >> "./$tex"
+		for (( j = 1; j <= questions; ++j )); do
+			echo -n $j >> "./$tex"
+			if (( j < questions )); then
 				echo -n ' & ' >> "./$tex"
 			fi
 		done
 		echo '\\' >> "./$tex"
 		echo '\hline' >> "./$tex"
-		for (( j = maxq; j < maxq + MAXQ - 1; ++j )); do
+		for (( j=1; j<$questions; ++j )); do
 			echo -n '&' >> "./$tex"
 		done
 		echo '\\' >> "./$tex"
 		echo '\hline' >> "./$tex"
-	done
 ################################################################################
+	else
+################################################################################
+		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
+		echo '\hline' >> "./$tex"
+		for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
+			for (( j = maxq; j < maxq + MAXQ ; ++j )); do
+				if (( j <= questions )); then
+					echo -n $j >> "./$tex"
+				else
+					echo -n >> "./$tex"
+				fi
+				if (( j < maxq + MAXQ - 1 )); then
+					echo -n ' & ' >> "./$tex"
+				fi
+			done
+			echo '\\' >> "./$tex"
+			echo '\hline' >> "./$tex"
+			for (( j = maxq; j < maxq + MAXQ - 1; ++j )); do
+				echo -n '&' >> "./$tex"
+			done
+			echo '\\' >> "./$tex"
+			echo '\hline' >> "./$tex"
+		done
+################################################################################
+	fi
 	echo '\end{tabular}' >> "./$tex"
 	echo '\end{center}' >> "./$tex"
 	echo '\end{minipage}' >> "./$tex"
