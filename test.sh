@@ -5,7 +5,7 @@
 answer='5.0' # width of answer column in mm
 cols=1       # number of columns
 date=`date  '+%d/%m/%Y'`
-empty=''
+empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
 image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
 questions=10 # number of questions
@@ -20,7 +20,7 @@ help()
 	echo "usage: $(basename $0) -p file.pre [options]"
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
 	echo -e "\t -d \t don't show date, $date by default"
-	echo -e "\t -e \t add empty page, no by default"
+	echo -e "\t -e \t avoid empty pages"
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory, "
 	echo -e "\t -p \t pre file, mandatory"
@@ -44,7 +44,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 	case ${args[$i]} in
 		-c) (( ++i )); cols=${args[$i]};;
 		-d) date='';;
-		-e) empty='. \clearpage';;
+		-e) empty='';;
 		-h) help;;
 		-i) (( ++i )); image=${args[$i]};;
 		-p) (( ++i )); pre=${args[$i]};;
