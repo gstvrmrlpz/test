@@ -22,7 +22,7 @@ help()
 	echo -e "\t -d \t don't show date, $date by default"
 	echo -e "\t -e \t avoid empty pages"
 	echo -e "\t -h \t show this help"
-	echo -e "\t -i \t image directory, "
+	echo -e "\t -i \t image directory {atc,etsiit,ugr}-log.png"
 	echo -e "\t -p \t pre file, mandatory"
 	echo -e "\t -q \t number of questions, $questions by default"
 	echo -e "\t -s \t subject, mandatory"
