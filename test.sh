@@ -3,7 +3,7 @@
 ###############################################################################
 
 answer='5.0' # width of answer column in mm
-cols=1       # number of columns
+cols=2       # number of columns
 date=`date  '+%d/%m/%Y'`
 empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
 image='/home/gustavo/docencia/logotipos'
