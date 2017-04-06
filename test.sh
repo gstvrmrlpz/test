@@ -236,7 +236,7 @@ EOF
 # test loop
 ###############################################################################
 
-for (( t=0; t<$tests; ++t )); do
+for (( t = 1; t <= $tests; ++t )); do
 	p2=("${p[@]}")
 	a2=("${a[@]}")
 	b2=("${b[@]}")
@@ -402,13 +402,13 @@ if (( questions <= MAXQ )); then
 	echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
 	echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	echo -n 'n' >> "./$tex"
-	for (( q=1; q<=$questions; ++q )); do
+	for (( q = 1; q <= $questions; ++q )); do
 		echo -n " & $q" >> "./$tex"
 	done
 	echo '\\' >> "./$tex"
 	echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	echo "\cline{2-$((questions + 1))}" >> "./$tex"
-	for (( t=0; t<$tests; ++t )); do
+	for (( t = 1; t <= $tests; ++t )); do
 		echo "$t & ${sol[$t]} \\\\" >> "./$tex"
 			echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	done
@@ -419,7 +419,7 @@ else
 ################################################################################
 # long
 ################################################################################
-	for (( t = 0; t < tests; ++t )); do
+	for (( t = 1; t <= tests; ++t )); do
 		echo "$t" >> "./$tex"
 		echo '\begin{center}' >> "./$tex"
 		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
