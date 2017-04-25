@@ -393,10 +393,11 @@ echo '% soluciones' >> "./$tex"
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo "{\large Tema: $name \hfill $date}" >> "./$tex"
 echo >> "./$tex"
-if (( questions <= MAXQ )); then
+
 ################################################################################
 # short
 ################################################################################
+if (( questions <= MAXQ )); then
 	echo '\begin{center}' >> "./$tex"
 	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
 	echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
@@ -409,16 +410,17 @@ if (( questions <= MAXQ )); then
 	echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	echo "\cline{2-$((questions + 1))}" >> "./$tex"
 	for (( t = 1; t <= $tests; ++t )); do
-		echo "$t & ${sol[$t]} \\\\" >> "./$tex"
-			echo "\cline{2-$((questions + 1))}" >> "./$tex"
+		partial="${sol[$t]}"
+		position=$(( 4 * (questions -1) + 1 ))
+		echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "./$tex"
 	done
 	echo '\end{tabular}' >> "./$tex"
 	echo '\end{center}' >> "./$tex"
 	echo >> "./$tex"
-else
 ################################################################################
 # long
 ################################################################################
+else
 	for (( t = 1; t <= tests; ++t )); do
 		echo "$t" >> "./$tex"
 		echo '\begin{center}' >> "./$tex"
@@ -457,6 +459,8 @@ else
 		echo >> "./$tex"
 	done
 fi
+################################################################################
+
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo >> "./$tex"
 echo '\end{document}' >> "./$tex"
