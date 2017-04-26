@@ -6,6 +6,7 @@ answer='5.0' # width of answer column in mm
 cols=2       # number of columns
 date=`date  '+%d/%m/%Y'`
 empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
+filename=''
 image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
 questions=10 # number of questions
@@ -21,6 +22,7 @@ help()
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
 	echo -e "\t -d \t don't show date, $date by default"
 	echo -e "\t -e \t avoid empty pages"
+	echo -e "\t -f \t default test name is filename"
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-log.png"
 	echo -e "\t -p \t pre file, mandatory"
@@ -45,6 +47,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 		-c) (( ++i )); cols=${args[$i]};;
 		-d) date='';;
 		-e) empty='';;
+		-f) (( ++i )); filename=${args[$i]};;
 		-h) help;;
 		-i) (( ++i )); image=${args[$i]};;
 		-p) (( ++i )); pre=${args[$i]};;
@@ -85,8 +88,10 @@ tex=${pre/.pre/.tex}
 (( w4 = 16 / cols ))
 (( w2 = 32 / cols ))
 
-name=${tex/.tex}
-name=${name^^}
+if [ -z "$filename" ]; then
+	filename=${tex/.tex}
+	filename="\lstinline[basicstyle=\bfseries\rmfamily]{${filename^^}}"
+fi
 
 ###############################################################################
 # read *.pre and check for errors
@@ -212,7 +217,7 @@ cat > "./$tex" <<EOF
 \begin{tabular}{*{3}{p{0.31\textwidth}}}
 	\epsfig{file=$image/ugr-logo.png,height=12mm} & \multicolumn{1}{c}{\epsfig{file=$image/etsiit-logo.png,height=12mm}} & \multicolumn{1}{r}{\epsfig{file=$image/atc-logo.png,height=12mm}} \\\\
 	\\\\
-	\multicolumn{3}{c}{$subject \hfill Examen: $name $date} \\\\
+	\multicolumn{3}{c}{$subject \hfill Examen: $filename $date} \\\\
 	\\\\
 	\multicolumn{1}{l}{Nombre:} & & DNI: \hspace{24mm} Grupo: \hspace{6mm} \\\\
 	\hline
@@ -391,7 +396,7 @@ done
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
 echo '% soluciones' >> "./$tex"
 echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
-echo "{\large Tema: $name \hfill $date}" >> "./$tex"
+echo "{\large Tema: $filename \hfill $date}" >> "./$tex"
 echo >> "./$tex"
 
 ################################################################################
