@@ -27,6 +27,7 @@ Opciones del script:
 		 -c 	 number of columns (1|2), 1 by default
 		 -d 	 don't show date, 01/04/2016 by default
 		 -e 	 empty page after every test, by default no
+		 -f 	 default test name is filename
 		 -h 	 show this help
 		 -i 	 image directory, 
 		 -p 	 pre file, mandatory
