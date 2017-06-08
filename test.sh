@@ -9,7 +9,7 @@ empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
 filename=''
 image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
-questions=10 # number of questions
+questions=0  # number of questions
 RANDOM=0
 subject=''
 tests=1
@@ -143,8 +143,11 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 fi
 
 # all questions by default
-questions=${#p[@]}
+if (( questions == 0 )); then
+	questions=${#p[@]}
+fi
 
+# at least one...
 if (( questions < 1 )); then
 	echo "there must be at least one question!"
 	exit 1
