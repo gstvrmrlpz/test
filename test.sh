@@ -143,7 +143,7 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 fi
 
 # all questions by default and no more than maximun
-if (( questions == 0 )) || (( questions > ${#p[@]} )) ; then
+if (( questions == 0 )) || (( questions > ${#p[@]} )); then
 	questions=${#p[@]}
 fi
 
