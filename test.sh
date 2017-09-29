@@ -26,7 +26,7 @@ help()
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-log.png"
 	echo -e "\t -p \t pre file, mandatory"
-	echo -e "\t -q \t number of questions, all by default"
+	echo -e "\t -q \t number of questions, all by default ($questions)"
 	echo -e "\t -s \t subject, mandatory"
 	echo -e "\t -t \t number of tests, $tests by default"
 	exit 1
@@ -143,14 +143,8 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 fi
 
 # all questions by default and no more than maximun
-if (( questions == 0 )) || (( questions > ${#p[@]} )); then
+if (( questions < 1 )) || (( questions > ${#p[@]} )); then
 	questions=${#p[@]}
-fi
-
-# at least one...
-if (( questions < 1 )); then
-	echo "there must be at least one question!"
-	exit 1
 fi
 
 ###############################################################################
