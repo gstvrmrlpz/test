@@ -257,9 +257,9 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo >> "./$tex"
 	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "./$tex"
 	echo >> "./$tex"
-	valor1=`LANG=C printf '%2.3f' $(bc -l <<< "10/$questions")`
-	valor2=`LANG=C printf '%2.3f' $(bc -l <<< "10/(3*$questions)")`
-	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $valor1\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = -$valor2\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
+	good=`LANG=C printf '%2.2f' $(bc -l <<< "10/$questions")`
+	bad=`LANG=C printf '%2.2f' $(bc -l <<< "10/(3*$questions)")`
+	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $good\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = -$bad\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
 	echo >> "./$tex"
 	echo '\vspace{1mm}' >> "./$tex"
 	echo >> "./$tex"
