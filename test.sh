@@ -20,11 +20,11 @@ help()
 {
 	echo "usage: $(basename $0) -p file.pre [options]"
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
-	echo -e "\t -d \t don't show date, $date by default"
+	echo -e "\t -d \t date, today($date) by default, '' to avoid"
 	echo -e "\t -e \t avoid empty pages"
 	echo -e "\t -f \t default test name is filename"
 	echo -e "\t -h \t show this help"
-	echo -e "\t -i \t image directory {atc,etsiit,ugr}-log.png"
+	echo -e "\t -i \t image directory {atc,etsiit,ugr}-logo.png"
 	echo -e "\t -p \t pre file, mandatory"
 	echo -e "\t -q \t number of questions, all by default ($questions)"
 	echo -e "\t -s \t subject, mandatory"
@@ -43,9 +43,10 @@ fi
 declare -a args=("$@")
 
 for (( i=0; i<${#args[@]}; ++i )); do
+	next=${args[$((i+1))]}
 	case ${args[$i]} in
 		-c) (( ++i )); cols=${args[$i]};;
-		-d) date='';;
+		-d) if [ "${next:0:1}" != "-" ]; then (( ++i )); date=$next; fi;;
 		-e) empty='';;
 		-f) (( ++i )); filename=${args[$i]};;
 		-h) help;;
