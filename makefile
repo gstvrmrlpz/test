@@ -12,8 +12,8 @@ TST = $(shell which test.sh)
 all: $(PDF)
 
 auto: $(TEX)
-	while pgrep latexmk > /dev/null; do $(MAKE) -s; sleep 1; done &
-	latexmk -f -pdf -pvc `ls -t $(TEX) | head -n 1`
+	while true; do inotifywait -qr -e modify .; make '$<'; done &
+	latexmk -f -pdf -pvc '$<'
 
 clean:
 	-if [ -e $(TEX) ]; then latexmk -C; fi
@@ -22,10 +22,10 @@ clean:
 ###############################################################################
 
 %.tex: %.pre $(TST) makefile
-	$(TST) -c 2 -i logotipos -p $< -q 64 -s "Arquitectura de Computadores" -t 3
+	$(TST) -c 2 -i logotipos -p '$<' -q 64 -s "Arquitectura de Computadores" -t 3
 
 %.pdf: %.tex
-	latexmk -pdf $*
+	latexmk -pdf '$*'
 
 ###############################################################################
 
