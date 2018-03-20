@@ -16,7 +16,7 @@ auto: $(TEX)
 	latexmk -f -pdf -pvc '$<'
 
 clean:
-	-if [ -e $(TEX) ]; then latexmk -C; fi
+	-[ -e $(TEX) ] && latexmk -C
 	-$(RM) $(PDF) $(TEX) *~
 
 ###############################################################################
