@@ -24,21 +24,21 @@ help()
 {
 	echo "usage: $(basename $0) -p file.pre [options]"
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
-	echo -e "\t -d \t date, today($date) by default, '' to avoid"
+	echo -e "\t -d \t today by default, '' to avoid"
 	echo -e "\t -e \t avoid empty pages"
 	echo -e "\t -f \t default test name is filename"
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-logo.png"
-	echo -e "\t -p \t pre file, mandatory"
+	echo -e "\t -p \t question file *.pre, mandatory"
 	echo -e "\t -q \t number of questions, all by default ($questions)"
-	echo -e "\t -s \t subject, mandatory"
+	echo -e "\t -s \t subject"
 	echo -e "\t -t \t number of tests, $tests by default"
 	exit 1
 }
 
 ###############################################################################
 
-if [[ $# < 1 ]]; then
+if [ $# -lt 2 ]; then
 	help
 fi
 
@@ -77,8 +77,9 @@ if [ ! -d "$image" ]; then
 	exit 1
 fi
 
-if [ -z "$pre" ] || [ -z "$subject" ]; then
-	help
+if [ -z "$pre" ]; then
+	echo "$0: mandatory question file!"
+	exit 1
 fi
 
 for i in $pre $style; do
@@ -262,8 +263,6 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo >> "./$tex"
 	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "./$tex"
 	echo >> "./$tex"
-#	good=`LANG=C printf '%2.2f' $(bc -l <<< "10/$questions")`
-#	bad=`LANG=C printf '%2.2f' $(bc -l <<< "10/(3*$questions)")`
 	good=`printf '%2.2f' $(bc -l <<< "10/$questions")`
 	bad=`printf '%2.2f' $(bc -l <<< "10/(3*$questions)")`
 	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $good\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = -$bad\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
