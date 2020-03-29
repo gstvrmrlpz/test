@@ -124,7 +124,7 @@ while read -r clave linea; do
 	fi
 	
 	case $clave in
-		''|'#'*|'%'*) ;;  # comments with # and %
+		''|'#'*|'%'*) ;;  # comments with # or %
 		p) p+=("$linea");;
 		a) a+=("$linea");;
 		b) b+=("$linea");;
@@ -332,7 +332,7 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo >> "./$tex"
 
 	for (( i=0; i<$questions; ++i )); do
-		n=`bc <<< $RANDOM%${#p2[@]}`
+		n=$(( $RANDOM % ${#p2[@]} )) # n=`bc <<< $RANDOM%${#p2[@]}`
 		echo "\item ${p2[$n]}" >> "./$tex"
 		echo "\begin{enumerate}" >> "./$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
