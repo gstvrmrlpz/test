@@ -105,10 +105,6 @@ fi
 
 linenumber=1
 while read -r clave linea; do
-#	if [ "$clave" ] && [ "${clave:0:1}" != "%" ]; then
-#		eval "$clave+=('$linea')"
-#	fi
-
 	# missing line after valid key avoiding comments
 	if [[ -n "$clave" && -z "$linea" && "${clave:0:1}" != "#" && "${clave:0:1}" != "%" ]]; then
 		echo "error in line $linenumber: \"$clave $linea\""
@@ -186,6 +182,7 @@ cat > "./$tex" <<EOF
 \lstset{
 	alsoletter={\%},
 	basicstyle=\ttfamily,
+	belowskip=0pt,
 	breaklines=true,
 	extendedchars=true,
 	inputencoding=utf8,
@@ -232,9 +229,9 @@ cat > "./$tex" <<EOF
 \vspace{5mm}
 }
 
-\newenvironment{mfigure}
-	{\par\medskip\noindent\minipage{\linewidth}}
-	{\endminipage\par\medskip}
+%\newenvironment{mfigure}
+%	{\par\medskip\noindent\minipage{\linewidth}}
+%	{\endminipage\par\medskip}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -255,9 +252,9 @@ for (( t = 1; t <= $tests; ++t )); do
 	d2=("${d[@]}")
 	s2=("${s[@]}")
 
-	echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+	printf '%79s\n' | tr ' ' '%' >> "./$tex"
 	echo "% test $t" >> "./$tex"
-	echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+	printf '%79s\n' | tr ' ' '%' >> "./$tex"
 	echo >> "./$tex"
 	echo '\encabezado' >> "./$tex"
 	echo >> "./$tex"
@@ -328,11 +325,11 @@ for (( t = 1; t <= $tests; ++t )); do
 
 	echo '\begin{enumerate}' >> "./$tex"
 	echo >> "./$tex"
-	echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+	printf '%79s\n' | tr ' ' '%' >> "./$tex"
 	echo >> "./$tex"
 
 	for (( i=0; i<$questions; ++i )); do
-		n=$(( $RANDOM % ${#p2[@]} )) # n=`bc <<< $RANDOM%${#p2[@]}`
+		n=$(( $RANDOM % ${#p2[@]} ))
 		echo "\item ${p2[$n]}" >> "./$tex"
 		echo "\begin{enumerate}" >> "./$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
@@ -359,12 +356,13 @@ for (( t = 1; t <= $tests; ++t )); do
 			b) correcta="${b2[$n]}";;
 			c) correcta="${c2[$n]}";;
 			d) correcta="${d2[$n]}";;
-			b) echo "respuesta incorrecta en ${p2[$n]}"; exit 1;;
+			*) echo "respuesta incorrecta en ${p2[$n]}"; exit 1;;
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-			echo -en "\t\item " >> "./$tex"
-			echo "$respuesta \par" >> "./$tex" # \par needed for listings
+			echo -n "\item " >> "./$tex"
+#			echo "$respuesta \par" >> "./$tex" # \par needed for listings
+			echo "$respuesta" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
@@ -379,7 +377,7 @@ for (( t = 1; t <= $tests; ++t )); do
 		fi
 		echo '\end{enumerate}' >> "./$tex"
 		echo >> "./$tex"
-		echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+		printf '%79s\n' | tr ' ' '%' >> "./$tex"
 		echo >> "./$tex"
 		p2=("${p2[@]:0:$n}" "${p2[@]:$(($n + 1))}")
 		a2=("${a2[@]:0:$n}" "${a2[@]:$(($n + 1))}")
@@ -399,9 +397,9 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo >> "./$tex"
 done
 
-echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+printf '%79s\n' | tr ' ' '%' >> "./$tex"
 echo '% soluciones' >> "./$tex"
-echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+printf '%79s\n' | tr ' ' '%' >> "./$tex"
 echo "{\large Examen: $filename \hfill $date}" >> "./$tex"
 echo >> "./$tex"
 
@@ -472,7 +470,7 @@ else
 fi
 ################################################################################
 
-echo '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%' >> "./$tex"
+printf '%79s\n' | tr ' ' '%' >> "./$tex"
 echo >> "./$tex"
 echo '\end{document}' >> "./$tex"
 
