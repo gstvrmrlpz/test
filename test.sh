@@ -180,9 +180,10 @@ cat > "./$tex" <<EOF
 \geometry{margin=8mm,top=16mm,bottom=16mm}
 
 \lstset{
+	aboveskip=0,
 	alsoletter={\%},
 	basicstyle=\ttfamily,
-	belowskip=0pt,
+	belowskip=0,
 	breaklines=true,
 	extendedchars=true,
 	inputencoding=utf8,
