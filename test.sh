@@ -401,7 +401,7 @@ done
 printf '%79s\n' | tr ' ' '%' >> "./$tex"
 echo '% soluciones' >> "./$tex"
 printf '%79s\n' | tr ' ' '%' >> "./$tex"
-echo "{\large Examen: $filename \hfill $date}" >> "./$tex"
+echo "{\large Asignatura: $subject \hfill Examen: $filename \hfill $date}" >> "./$tex"
 echo >> "./$tex"
 
 ################################################################################
