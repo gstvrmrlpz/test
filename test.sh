@@ -96,7 +96,7 @@ tex=${pre/.pre/.tex}
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
-	filename="\lstinline[basicstyle=\bfseries\rmfamily]{${filename^^}}"
+#	filename="\lstinline[basicstyle=\bfseries\rmfamily]{${filename^^}}"
 fi
 
 ###############################################################################
@@ -401,7 +401,7 @@ done
 printf '%79s\n' | tr ' ' '%' >> "./$tex"
 echo '% soluciones' >> "./$tex"
 printf '%79s\n' | tr ' ' '%' >> "./$tex"
-echo "{\large Asignatura: $subject \hfill Examen: $filename \hfill $date}" >> "./$tex"
+echo "{\large \bf Asignatura: $subject \hfill Examen: $filename \hfill $date}" >> "./$tex"
 echo >> "./$tex"
 
 ################################################################################
