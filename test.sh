@@ -121,11 +121,11 @@ while read -r clave linea; do
 	
 	case $clave in
 		''|'#'*|'%'*) ;;  # comments with # or %
-		p) p+=("$linea");;
-		a) a+=("$linea");;
-		b) b+=("$linea");;
-		c) c+=("$linea");;
-		d) d+=("$linea");;
+		p) p+=("{$linea}");;
+		a) a+=("{$linea}");;
+		b) b+=("{$linea}");;
+		c) c+=("{$linea}");;
+		d) d+=("{$linea}");;
 		s) s+=("$linea");;
 		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
