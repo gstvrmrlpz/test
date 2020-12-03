@@ -96,7 +96,6 @@ tex=${pre/.pre/.tex}
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
-#	filename="\lstinline[basicstyle=\bfseries\rmfamily]{${filename^^}}"
 fi
 
 ###############################################################################
@@ -230,9 +229,9 @@ cat > "./$tex" <<EOF
 \vspace{5mm}
 }
 
-%\newenvironment{mfigure}
-%	{\par\medskip\noindent\minipage{\linewidth}}
-%	{\endminipage\par\medskip}
+\newenvironment{mfigure}
+	{\par\medskip\noindent\minipage{\linewidth}}
+	{\endminipage\par\medskip}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
