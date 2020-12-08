@@ -14,7 +14,7 @@ filename=''
 image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
 questions=0  # number of questions
-RANDOM=0
+seed=0
 subject=''
 tests=1
 
@@ -31,6 +31,7 @@ help()
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-logo.png"
 	echo -e "\t -p \t question file *.pre, mandatory"
 	echo -e "\t -q \t number of questions, all by default ($questions)"
+	echo -e "\t -r \t random seed, $seed by default"
 	echo -e "\t -s \t subject"
 	echo -e "\t -t \t number of tests, $tests by default"
 	exit 1
@@ -57,6 +58,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 		-i) (( ++i )); image=${args[$i]};;
 		-p) (( ++i )); pre=${args[$i]};;
 		-q) (( ++i )); questions=${args[$i]};;
+		-r) (( ++i )); seed=${args[$i]:-$seed};;
 		-s) (( ++i )); subject=${args[$i]};;
 		-t) (( ++i )); tests=${args[$i]};;
 		 *) echo unknown option \"${args[$i]}\"; exit 1;;
@@ -97,6 +99,8 @@ tex=${pre/.pre/.tex}
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
 fi
+
+RANDOM=$seed
 
 ###############################################################################
 # read *.pre and check for errors
