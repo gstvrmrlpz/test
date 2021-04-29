@@ -114,7 +114,7 @@ while read -r clave linea; do
 		exit 1
 	fi
 	
-	# wrong answer
+	# wrong answer?
 	if [[ "$clave" == "s" ]]; then
 		case $linea in
 			a|b|c|d);;
@@ -122,8 +122,12 @@ while read -r clave linea; do
 		esac
 	fi
 	
+	# delete comments at line end... can be the whole line
+	linea="${linea%%\#*}"
+	linea="${linea%%\%*}"
+	
 	case $clave in
-		''|'#'*|'%'*) ;;  # comments with # or %
+		''|'#'*|'%'*) ;;  # avoid empty & commented lines
 		p) p+=("{$linea}");;
 		a) a+=("{$linea}");;
 		b) b+=("{$linea}");;
