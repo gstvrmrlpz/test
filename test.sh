@@ -122,17 +122,22 @@ while read -r clave linea; do
 		esac
 	fi
 	
-	# delete comments at line end... can be the whole line
-	linea="${linea%%\#*}"
-	linea="${linea%%\%*}"
+	# latex with mixed comments is dangerous... separate it!
+	pre=$(echo $linea | grep -o '^[^%]*')
+	comment=${linea/$pre}
+	if [ "$comment" == "$linea" ]; then
+		comment=""
+	else
+		linea=${pre%% }
+	fi
 	
 	case $clave in
 		''|'#'*|'%'*) ;;  # avoid empty & commented lines
-		p) p+=("{$linea}");;
-		a) a+=("{$linea}");;
-		b) b+=("{$linea}");;
-		c) c+=("{$linea}");;
-		d) d+=("{$linea}");;
+		p) p+=("{$linea} $comment");;
+		a) a+=("{$linea} $comment");;
+		b) b+=("{$linea} $comment");;
+		c) c+=("{$linea} $comment");;
+		d) d+=("{$linea} $comment");;
 		s) s+=("$linea");;
 		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
