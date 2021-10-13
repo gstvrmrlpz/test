@@ -122,6 +122,9 @@ while read -r clave linea; do
 		esac
 	fi
 	
+	# remove lines with partial comments
+	linea=${linea%%\%*}
+	
 	case $clave in
 		''|'#'*|'%'*) ;;  # avoid empty & commented lines
 		p) p+=("$linea");;
@@ -205,11 +208,10 @@ cat > "./$tex" <<EOF
 	         {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
 	         {ñ}{{\~{n}}}1 {Ñ}{{\~{N}}}1 {€}{{\EUR}}1 {£}{{\pounds}}1,
 	numberstyle=\tiny\color{gray},
-	language=C++,
 	showspaces=false,
 	showstringspaces=false,
 	showtabs=false,
-	tabsize=2,
+	tabsize=2
 }
 
 \lstdefinestyle{n}{numbers=left}
@@ -364,9 +366,7 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-			echo -n "\item " >> "./$tex"
-#			echo "$respuesta \par" >> "./$tex" # \par needed for listings
-			echo "$respuesta" >> "./$tex"
+			echo "\item {$respuesta}" >> "./$tex" # using {} to protect latex code 
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
