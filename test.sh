@@ -122,8 +122,8 @@ while read -r clave linea; do
 		esac
 	fi
 	
-	# remove lines with partial comments
-	linea=${linea%%\%*}
+#	# remove lines with partial comments
+#	linea=${linea%%\%*}
 	
 	case $clave in
 		''|'#'*|'%'*) ;;  # avoid empty & commented lines
