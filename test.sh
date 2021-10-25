@@ -366,7 +366,8 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-			echo "\item {$respuesta}" >> "./$tex" # using {} to protect latex code 
+#			echo "\item {$respuesta}" >> "./$tex" # using {} to protect latex code --> column clash problem
+			echo "\item $respuesta" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
