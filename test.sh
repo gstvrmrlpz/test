@@ -159,8 +159,6 @@ fi
 # *.tex header
 ###############################################################################
 
-rm -f "./$tex"
-
 cat > "./$tex" <<EOF
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -179,11 +177,12 @@ cat > "./$tex" <<EOF
 \usepackage[utf8]{inputenc}     % tildes
 \usepackage{listings}           % listado de fuentes
 \usepackage{multicol}           % varias columnas
+\usepackage{pbox}
 \usepackage{xcolor}             % gray
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\geometry{margin=8mm,top=16mm,bottom=16mm}
+\geometry{margin=7mm,top=15mm,bottom=15mm}
 
 \lstset{
 	aboveskip=0pt,
@@ -366,8 +365,9 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-#			echo "\item $respuesta" >> "./$tex"
-			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
+#			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
+			echo "\item $respuesta \\-" >> "./$tex"
+#			echo "\item $respuesta\\" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
