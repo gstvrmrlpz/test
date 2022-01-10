@@ -177,7 +177,6 @@ cat > "./$tex" <<EOF
 \usepackage[utf8]{inputenc}     % tildes
 \usepackage{listings}           % listado de fuentes
 \usepackage{multicol}           % varias columnas
-\usepackage{pbox}
 \usepackage{xcolor}             % gray
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
