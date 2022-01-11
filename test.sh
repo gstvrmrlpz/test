@@ -193,7 +193,6 @@ cat > "./$tex" <<EOF
 	extendedchars=true,
 	inputencoding=utf8,
 	keepspaces=true,
-	language=C++,
 	literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
 	         {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
 	         {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
@@ -366,8 +365,8 @@ for (( t = 1; t <= $tests; ++t )); do
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
 #			echo "\item $respuesta" >> "./$tex"
-#			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
-			echo "\item $respuesta \\-" >> "./$tex"
+			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
+#			echo "\item $respuesta \\-" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
