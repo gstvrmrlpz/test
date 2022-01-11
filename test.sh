@@ -13,6 +13,7 @@ empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
 filename=''
 image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
+MAXT=35      # longest answer table in the short format
 questions=0  # number of questions
 seed=0
 subject=''
@@ -411,7 +412,7 @@ echo >> "./$tex"
 # short
 ################################################################################
 if (( questions <= MAXQ )); then
-	for (( t2 = 1; t2 <= tests; t2 += 35 )); do # split long tables
+	for (( t2 = 1; t2 <= tests; t2 += MAXT )); do # split long tables
 		echo '\begin{center}' >> "./$tex"
 		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
 		echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
@@ -423,7 +424,7 @@ if (( questions <= MAXQ )); then
 		echo '\\' >> "./$tex"
 		echo "\cline{2-$((questions + 1))}" >> "./$tex"
 		echo "\cline{2-$((questions + 1))}" >> "./$tex"
-		for (( t = t2; t <= t2 + 35 - 1 && t <= tests; ++t )); do
+		for (( t = t2; t <= t2 + MAXT - 1 && t <= tests; ++t )); do
 			partial="${sol[$t]}"
 			position=$(( 4 * (questions -1) + 1 ))
 			echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "./$tex"
