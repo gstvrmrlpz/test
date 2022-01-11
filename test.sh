@@ -364,9 +364,9 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
+#			echo "\item $respuesta" >> "./$tex"
 #			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
 			echo "\item $respuesta \\-" >> "./$tex"
-#			echo "\item $respuesta\\" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
@@ -411,25 +411,27 @@ echo >> "./$tex"
 # short
 ################################################################################
 if (( questions <= MAXQ )); then
-	echo '\begin{center}' >> "./$tex"
-	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
-	echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
-	echo "\cline{2-$((questions + 1))}" >> "./$tex"
-	echo -n 'n' >> "./$tex"
-	for (( q = 1; q <= $questions; ++q )); do
-		echo -n " & $q" >> "./$tex"
+	for (( t2 = 1; t2 <= tests; t2 += 35 )); do # split long tables
+		echo '\begin{center}' >> "./$tex"
+		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+		echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
+		echo "\cline{2-$((questions + 1))}" >> "./$tex"
+		echo -n 'n' >> "./$tex"
+		for (( q = 1; q <= $questions; ++q )); do
+			echo -n " & $q" >> "./$tex"
+		done
+		echo '\\' >> "./$tex"
+		echo "\cline{2-$((questions + 1))}" >> "./$tex"
+		echo "\cline{2-$((questions + 1))}" >> "./$tex"
+		for (( t = t2; t <= t2 + 35 - 1 && t <= tests; ++t )); do
+			partial="${sol[$t]}"
+			position=$(( 4 * (questions -1) + 1 ))
+			echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "./$tex"
+		done
+		echo '\end{tabular}' >> "./$tex"
+		echo '\end{center}' >> "./$tex"
+		echo >> "./$tex"
 	done
-	echo '\\' >> "./$tex"
-	echo "\cline{2-$((questions + 1))}" >> "./$tex"
-	echo "\cline{2-$((questions + 1))}" >> "./$tex"
-	for (( t = 1; t <= $tests; ++t )); do
-		partial="${sol[$t]}"
-		position=$(( 4 * (questions -1) + 1 ))
-		echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "./$tex"
-	done
-	echo '\end{tabular}' >> "./$tex"
-	echo '\end{center}' >> "./$tex"
-	echo >> "./$tex"
 ################################################################################
 # long
 ################################################################################
