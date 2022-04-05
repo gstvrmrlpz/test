@@ -177,6 +177,7 @@ cat > "./$tex" <<EOF
 \usepackage{graphicx}           % includegraphics
 \usepackage[utf8]{inputenc}     % tildes
 \usepackage{listings}           % listado de fuentes
+\usepackage{minted}             % código
 \usepackage{multicol}           % varias columnas
 \usepackage{xcolor}             % gray
 
@@ -215,6 +216,8 @@ cat > "./$tex" <<EOF
 \lstdefinestyle{n}{numbers=left}
 \lstdefinestyle{s}{basicstyle=\small\ttfamily}
 \lstdefinestyle{fn}{basicstyle=\footnotesize\ttfamily}
+
+\setminted{autogobble,breaklines,tabsize=2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -334,7 +337,7 @@ for (( t = 1; t <= $tests; ++t )); do
 
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
-		echo "\item ${p2[$n]}" >> "./$tex"
+		echo "\item ${p2[$n]}" | sed 's/\(\\includegraphics[^}]*}\)/\\\\\n\\begin{wrapfigure}{l}{\\linewidth} \\\\\n\1 \\\\\n\\end{wrapfigure} \\\\/' >> "./$tex" # wrapfigure
 		echo "\begin{enumerate}" >> "./$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
@@ -366,7 +369,6 @@ for (( t = 1; t <= $tests; ++t )); do
 			respuesta="${desorden[$pos]}"
 #			echo "\item $respuesta" >> "./$tex"
 			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
-#			echo "\item $respuesta \\-" >> "./$tex"
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
