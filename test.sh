@@ -173,12 +173,13 @@ cat > "./$tex" <<EOF
 \usepackage{caption}            % captionof
 \usepackage[ddmmyyyy]{datetime} % formato fecha (\today)
 \usepackage{epsfig}             % epsfig
+\usepackage[T1]{fontenc}        % soporte idiomas
 \usepackage{geometry}           % geometry
 \usepackage{graphicx}           % includegraphics
-\usepackage[utf8]{inputenc}     % tildes
 \usepackage{listings}           % listado de fuentes
 \usepackage{minted}             % código
 \usepackage{multicol}           % varias columnas
+\usepackage{wrapfig}            % protect includegraphics inside multicols
 \usepackage{xcolor}             % gray
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -337,7 +338,7 @@ for (( t = 1; t <= $tests; ++t )); do
 
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
-		echo "\item ${p2[$n]}" | sed 's/\(\\includegraphics[^}]*}\)/\\\\\n\\begin{wrapfigure}{l}{\\linewidth} \\\\\n\1 \\\\\n\\end{wrapfigure} \\\\/' >> "./$tex" # wrapfigure
+		echo "\item ${p2[$n]}" >> "./$tex"
 		echo "\begin{enumerate}" >> "./$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
@@ -367,8 +368,8 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-#			echo "\item $respuesta" >> "./$tex"
-			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
+			echo "\item $respuesta" >> "./$tex"
+#			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
