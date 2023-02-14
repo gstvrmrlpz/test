@@ -226,7 +226,7 @@ cat > "./$tex" <<EOF
 \begin{center}
 \bfseries \large
 \begin{tabular}{*{3}{p{0.31\textwidth}}}
-	\epsfig{file=$image/ugr-logo.png,height=12mm} & \multicolumn{1}{c}{\epsfig{file=$image/etsiit-logo.png,height=12mm}} & \multicolumn{1}{r}{\epsfig{file=$image/atc-logo.png,height=12mm}} \\\\
+	\includegraphics[height=12mm]{$image/ugr-logo.png} & \multicolumn{1}{c}{\includegraphics[height=12mm]{$image/etsiit-logo.png}} & \multicolumn{1}{r}{\includegraphics[height=12mm]{$image/icar-logo.png}} \\\\
 	\\\\
 	\multicolumn{3}{c}{$subject \hfill Examen: $filename $date} \\\\
 	\\\\
