@@ -218,7 +218,18 @@ cat > "./$tex" <<EOF
 \lstdefinestyle{s}{basicstyle=\small\ttfamily}
 \lstdefinestyle{fn}{basicstyle=\footnotesize\ttfamily}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \setminted{autogobble,breaklines,tabsize=2}
+
+%\usemintedstyle{xcode} % B/W solution to red square problem
+\usepackage{etoolbox,xpatch} % color solution to red square problem
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\xpatchcmd{\inputminted}{\minted@fvset}{\minted@fvset\dontdofcolorbox}{}{}
+\xpatchcmd{\mintinline}{\minted@fvset}{\minted@fvset\dontdofcolorbox}{}{} % see https://tex.stackexchange.com/a/401250/
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
