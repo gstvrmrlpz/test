@@ -167,20 +167,20 @@ cat > "./$tex" <<EOF
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{array}              % m
-\usepackage{amsmath}            % texto en modo matemático
-\usepackage[spanish]{babel}     % español
-\usepackage{caption}            % captionof
-\usepackage[ddmmyyyy]{datetime} % formato fecha (\today)
-\usepackage{epsfig}             % epsfig
-\usepackage[T1]{fontenc}        % soporte idiomas
-\usepackage{geometry}           % geometry
-\usepackage{graphicx}           % includegraphics
-\usepackage{listings}           % listado de fuentes
-\usepackage{minted}             % código
-\usepackage{multicol}           % varias columnas
-\usepackage{wrapfig}            % protect includegraphics inside multicols
-\usepackage{xcolor}             % gray
+\usepackage{array}               % m
+\usepackage{amsmath}             % texto en modo matemático
+\usepackage[spanish]{babel}      % español
+\usepackage{caption}             % captionof
+\usepackage[ddmmyyyy]{datetime}  % formato fecha (\today)
+\usepackage{epsfig}              % epsfig
+\usepackage[T1]{fontenc}         % soporte idiomas
+\usepackage{geometry}            % geometry
+\usepackage{graphicx}            % includegraphics
+\usepackage{listings}            % listado de fuentes
+\usepackage[cache=false]{minted} % código
+\usepackage{multicol}            % varias columnas
+\usepackage{wrapfig}             % protect includegraphics inside multicols
+\usepackage{xcolor}              % gray
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
