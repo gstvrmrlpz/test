@@ -67,7 +67,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 done
 
 if (( cols < 0 || cols > 2 )); then
-	echo 'Only 1 or 2 columns supported!'
+	echo "$0: Only 1 or 2 columns supported!"
 	exit 1
 fi
 
@@ -76,7 +76,7 @@ if [ "$date" ]; then
 fi
 
 if [ ! -d "$image" ]; then
-	echo "$image directory doesn't exist!"
+	echo "$0: $image directory doesn't exist!"
 	exit 1
 fi
 
@@ -87,7 +87,7 @@ fi
 
 for i in $pre $style; do
 	if [ ! -e "$i" ]; then
-		echo "'$i' doesn't exist!"
+		echo "$0: '$i' doesn't exist!"
 		exit 1
 	fi
 done
@@ -114,7 +114,7 @@ while read -r clave linea; do
 		echo "error in line $linenumber: \"$clave $linea\""
 		exit 1
 	fi
-	
+
 	# wrong answer?
 	if [[ "$clave" == "s" ]]; then
 		case $linea in
@@ -122,10 +122,10 @@ while read -r clave linea; do
 			*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 		esac
 	fi
-	
+
 #	# remove lines with partial comments
 #	linea=${linea%%\%*}
-	
+
 	case $clave in
 		''|'#'*|'%'*) ;;  # avoid empty & commented lines
 		p) p+=("$linea");;
@@ -136,7 +136,7 @@ while read -r clave linea; do
 		s) s+=("$linea");;
 		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
-	
+
 	(( ++linenumber ));
 done < "./$pre"
 
@@ -177,7 +177,7 @@ cat > "./$tex" <<EOF
 \usepackage{geometry}            % geometry
 \usepackage{graphicx}            % includegraphics
 \usepackage{listings}            % listado de fuentes
-\usepackage[cache=false]{minted} % código
+\usepackage{minted}              % código \usepackage[cache=false]{minted}
 \usepackage{multicol}            % varias columnas
 \usepackage{wrapfig}             % protect includegraphics inside multicols
 \usepackage{xcolor}              % gray
@@ -495,4 +495,3 @@ echo >> "./$tex"
 echo '\end{document}' >> "./$tex"
 
 ###############################################################################
-
