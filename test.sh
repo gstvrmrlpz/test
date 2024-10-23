@@ -27,7 +27,7 @@ help()
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
 	echo -e "\t -d \t today by default, '' to avoid"
 	echo -e "\t -e \t avoid empty pages"
-	echo -e "\t -f \t default test name is filename"
+	echo -e "\t -f \t default test name is the same as the question file"
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-logo.png"
 	echo -e "\t -p \t question file *.pre, mandatory"
@@ -99,6 +99,8 @@ tex=${pre/.pre/.tex}
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
+    filename=${filename##*/}
+    # filename=${filename^^}
 fi
 
 RANDOM=$seed
