@@ -138,7 +138,7 @@ while read -r clave linea; do
 	esac
 
 	(( ++linenumber ));
-done < "./$pre"
+done < "$pre"
 
 if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${#d[@]} != ${#p[@]} || ${#s[@]} != ${#p[@]} )); then
 	echo "$(basename $0): number of p, a, b, c, d, s mismatch!!!";
@@ -160,7 +160,7 @@ fi
 # *.tex header
 ###############################################################################
 
-cat > "./$tex" <<EOF
+cat > "$tex" <<EOF
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper,11pt]{article}
@@ -271,86 +271,86 @@ for (( t = 1; t <= $tests; ++t )); do
 	d2=("${d[@]}")
 	s2=("${s[@]}")
 
-	printf '%79s\n' | tr ' ' '%' >> "./$tex"
-	echo "% test $t" >> "./$tex"
-	printf '%79s\n' | tr ' ' '%' >> "./$tex"
-	echo >> "./$tex"
-	echo '\encabezado' >> "./$tex"
-	echo >> "./$tex"
-	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "./$tex"
-	echo >> "./$tex"
+	printf '%79s\n' | tr ' ' '%' >> "$tex"
+	echo "% test $t" >> "$tex"
+	printf '%79s\n' | tr ' ' '%' >> "$tex"
+	echo >> "$tex"
+	echo '\encabezado' >> "$tex"
+	echo >> "$tex"
+	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "$tex"
+	echo >> "$tex"
 	good=`printf '%2.2f' $(bc -l <<< "10/$questions")`
 	bad=`printf '%2.2f' $(bc -l <<< "10/(3*$questions)")`
-	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $good\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = -$bad\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "./$tex"
-	echo >> "./$tex"
-	echo '\vspace{1mm}' >> "./$tex"
-	echo >> "./$tex"
+	echo "\noindent Escriba la opción correcta dentro de la casilla debajo de cada número de pregunta. Cada respuesta correcta vale \$10/$questions = $good\$ puntos, \$0\$ si no se contesta o está claramente tachada y \$10/(3 \times $questions) = -$bad\$ si es errónea o no está claramente contestada. Se aconseja terminar de leer completamente cada pregunta antes de contestarla." >> "$tex"
+	echo >> "$tex"
+	echo '\vspace{1mm}' >> "$tex"
+	echo >> "$tex"
 
-	echo '\begin{minipage}{0.95\textwidth}' >> "./$tex"
-	echo '\begin{center}' >> "./$tex"
-#	echo '\renewcommand\arraystretch{1.50}' >> "./$tex"
-	echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
+	echo '\begin{minipage}{0.95\textwidth}' >> "$tex"
+	echo '\begin{center}' >> "$tex"
+#	echo '\renewcommand\arraystretch{1.50}' >> "$tex"
+	echo '\renewcommand\arraystretch{1.45}' >> "$tex"
 	if ((questions <= MAXQ)); then
 ################################################################################
-		echo "\begin{tabular}{|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
-		echo '\hline' >> "./$tex"
+		echo "\begin{tabular}{|*{$questions}{m{${answer}mm}|}}" >> "$tex"
+		echo '\hline' >> "$tex"
 		for (( j = 1; j <= questions; ++j )); do
-			echo -n $j >> "./$tex"
+			echo -n $j >> "$tex"
 			if (( j < questions )); then
-				echo -n ' & ' >> "./$tex"
+				echo -n ' & ' >> "$tex"
 			fi
 		done
-		echo '\\' >> "./$tex"
-		echo '\hline' >> "./$tex"
+		echo '\\' >> "$tex"
+		echo '\hline' >> "$tex"
 		for (( j=1; j<$questions; ++j )); do
-			echo -n '&' >> "./$tex"
+			echo -n '&' >> "$tex"
 		done
-		echo '\\' >> "./$tex"
-		echo '\hline' >> "./$tex"
+		echo '\\' >> "$tex"
+		echo '\hline' >> "$tex"
 ################################################################################
 	else
 ################################################################################
-		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
-		echo '\hline' >> "./$tex"
+		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "$tex"
+		echo '\hline' >> "$tex"
 		for (( maxq = 1 ; maxq <= questions; maxq += MAXQ )); do
 			for (( j = maxq; j < maxq + MAXQ ; ++j )); do
 				if (( j <= questions )); then
-					echo -n $j >> "./$tex"
+					echo -n $j >> "$tex"
 				else
-					echo -n >> "./$tex"
+					echo -n >> "$tex"
 				fi
 				if (( j < maxq + MAXQ - 1 )); then
-					echo -n ' & ' >> "./$tex"
+					echo -n ' & ' >> "$tex"
 				fi
 			done
-			echo '\\' >> "./$tex"
-			echo '\hline' >> "./$tex"
+			echo '\\' >> "$tex"
+			echo '\hline' >> "$tex"
 			for (( j = maxq; j < maxq + MAXQ - 1; ++j )); do
-				echo -n '&' >> "./$tex"
+				echo -n '&' >> "$tex"
 			done
-			echo '\\' >> "./$tex"
-			echo '\hline' >> "./$tex"
+			echo '\\' >> "$tex"
+			echo '\hline' >> "$tex"
 		done
 ################################################################################
 	fi
-	echo '\end{tabular}' >> "./$tex"
-	echo '\end{center}' >> "./$tex"
-	echo '\end{minipage}' >> "./$tex"
-	echo >> "./$tex"
+	echo '\end{tabular}' >> "$tex"
+	echo '\end{center}' >> "$tex"
+	echo '\end{minipage}' >> "$tex"
+	echo >> "$tex"
 
 	if (( $cols == 2 )); then
-		echo "\begin{multicols}{$cols}" >> "./$tex"
+		echo "\begin{multicols}{$cols}" >> "$tex"
 	fi
 
-	echo '\begin{enumerate}' >> "./$tex"
-	echo >> "./$tex"
-	printf '%79s\n' | tr ' ' '%' >> "./$tex"
-	echo >> "./$tex"
+	echo '\begin{enumerate}' >> "$tex"
+	echo >> "$tex"
+	printf '%79s\n' | tr ' ' '%' >> "$tex"
+	echo >> "$tex"
 
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
-		echo "\item ${p2[$n]}" >> "./$tex"
-		echo "\begin{enumerate}" >> "./$tex"
+		echo "\item ${p2[$n]}" >> "$tex"
+		echo "\begin{enumerate}" >> "$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
 		for o in "${orden[@]}"; do
@@ -359,9 +359,9 @@ for (( t = 1; t <= $tests; ++t )); do
 			fi
 		done
 		if (( $width < $w4 )); then
-			echo '\begin{multicols}{4}' >> "./$tex"
+			echo '\begin{multicols}{4}' >> "$tex"
 		elif (( $width < $w2 )); then
-			echo '\begin{multicols}{2}' >> "./$tex"
+			echo '\begin{multicols}{2}' >> "$tex"
 		fi
 		declare -a desorden
 		pos=0
@@ -379,8 +379,8 @@ for (( t = 1; t <= $tests; ++t )); do
 		esac
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
-			echo "\item $respuesta" >> "./$tex"
-#			echo "\item \protect{$respuesta}" >> "./$tex" # protecting fragile code
+			echo "\item $respuesta" >> "$tex"
+#			echo "\item \protect{$respuesta}" >> "$tex" # protecting fragile code
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
@@ -391,12 +391,12 @@ for (( t = 1; t <= $tests; ++t )); do
 			(( ++pos ))
 		done
 		if (( $width < $w2 )); then
-			echo '\end{multicols}' >> "./$tex"
+			echo '\end{multicols}' >> "$tex"
 		fi
-		echo '\end{enumerate}' >> "./$tex"
-		echo >> "./$tex"
-		printf '%79s\n' | tr ' ' '%' >> "./$tex"
-		echo >> "./$tex"
+		echo '\end{enumerate}' >> "$tex"
+		echo >> "$tex"
+		printf '%79s\n' | tr ' ' '%' >> "$tex"
+		echo >> "$tex"
 		p2=("${p2[@]:0:$n}" "${p2[@]:$(($n + 1))}")
 		a2=("${a2[@]:0:$n}" "${a2[@]:$(($n + 1))}")
 		b2=("${b2[@]:0:$n}" "${b2[@]:$(($n + 1))}")
@@ -405,93 +405,93 @@ for (( t = 1; t <= $tests; ++t )); do
 		s2=("${s2[@]:0:$n}" "${s2[@]:$(($n + 1))}")
 	done
 
-	echo '\end{enumerate}' >> "./$tex"
+	echo '\end{enumerate}' >> "$tex"
 
 	if (( $cols == 2 )); then
-		echo '\end{multicols}' >> "./$tex"
+		echo '\end{multicols}' >> "$tex"
 	fi
 
-	echo "\cleardoublepage $empty" >> "./$tex"
-	echo >> "./$tex"
+	echo "\cleardoublepage $empty" >> "$tex"
+	echo >> "$tex"
 done
 
-printf '%79s\n' | tr ' ' '%' >> "./$tex"
-echo '% soluciones' >> "./$tex"
-printf '%79s\n' | tr ' ' '%' >> "./$tex"
-echo "{\large \bf Asignatura: $subject \hfill Examen: $filename \hfill $date}" >> "./$tex"
-echo >> "./$tex"
+printf '%79s\n' | tr ' ' '%' >> "$tex"
+echo '% soluciones' >> "$tex"
+printf '%79s\n' | tr ' ' '%' >> "$tex"
+echo "{\large \bf Asignatura: $subject \hfill Examen: $filename \hfill $date}" >> "$tex"
+echo >> "$tex"
 
 ################################################################################
 # short
 ################################################################################
 if (( questions <= MAXQ )); then
 	for (( t2 = 1; t2 <= tests; t2 += MAXT )); do # split long tables
-		echo '\begin{center}' >> "./$tex"
-		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
-		echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "./$tex"
-		echo "\cline{2-$((questions + 1))}" >> "./$tex"
-		echo -n 'n' >> "./$tex"
+		echo '\begin{center}' >> "$tex"
+		echo '\renewcommand\arraystretch{1.45}' >> "$tex"
+		echo "\begin{tabular}{c|*{$questions}{m{${answer}mm}|}}" >> "$tex"
+		echo "\cline{2-$((questions + 1))}" >> "$tex"
+		echo -n 'n' >> "$tex"
 		for (( q = 1; q <= $questions; ++q )); do
-			echo -n " & $q" >> "./$tex"
+			echo -n " & $q" >> "$tex"
 		done
-		echo '\\' >> "./$tex"
-		echo "\cline{2-$((questions + 1))}" >> "./$tex"
-		echo "\cline{2-$((questions + 1))}" >> "./$tex"
+		echo '\\' >> "$tex"
+		echo "\cline{2-$((questions + 1))}" >> "$tex"
+		echo "\cline{2-$((questions + 1))}" >> "$tex"
 		for (( t = t2; t <= t2 + MAXT - 1 && t <= tests; ++t )); do
 			partial="${sol[$t]}"
 			position=$(( 4 * (questions -1) + 1 ))
-			echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "./$tex"
+			echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "$tex"
 		done
-		echo '\end{tabular}' >> "./$tex"
-		echo '\end{center}' >> "./$tex"
-		echo >> "./$tex"
+		echo '\end{tabular}' >> "$tex"
+		echo '\end{center}' >> "$tex"
+		echo >> "$tex"
 	done
 ################################################################################
 # long
 ################################################################################
 else
 	for (( t = 1; t <= tests; ++t )); do
-		echo "$t" >> "./$tex"
-		echo '\begin{center}' >> "./$tex"
-		echo '\renewcommand\arraystretch{1.45}' >> "./$tex"
-		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "./$tex"
-		echo '\hline' >> "./$tex"
+		echo "$t" >> "$tex"
+		echo '\begin{center}' >> "$tex"
+		echo '\renewcommand\arraystretch{1.45}' >> "$tex"
+		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "$tex"
+		echo '\hline' >> "$tex"
 		all=${sol[$t]}
 		for (( maxq = 0; maxq < questions; maxq += MAXQ )); do
 			for (( j = maxq; j < maxq + MAXQ; ++j )); do
 				if (( j < questions )); then
-					echo -n $((j + 1)) >> "./$tex"
+					echo -n $((j + 1)) >> "$tex"
 				else
-					echo -n >> "./$tex"
+					echo -n >> "$tex"
 				fi
 				if (( j < maxq + MAXQ - 1 )); then
-					echo -n ' & ' >> "./$tex"
+					echo -n ' & ' >> "$tex"
 				fi
 			done
-			echo '\\' >> "./$tex"
-			echo '\hline' >> "./$tex"
+			echo '\\' >> "$tex"
+			echo '\hline' >> "$tex"
 			for (( j = maxq; j < maxq + MAXQ; ++j )); do
 				if (( j < questions)); then
-					echo -n ${all:$((4 * j)):1} >> "./$tex"
+					echo -n ${all:$((4 * j)):1} >> "$tex"
 				else
-					echo -n >> "./$tex"
+					echo -n >> "$tex"
 				fi
 				if (( j < maxq + MAXQ - 1)); then
-					echo -n ' & ' >> "./$tex"
+					echo -n ' & ' >> "$tex"
 				fi
 			done
-			echo '\\' >> "./$tex"
-			echo '\hline' >> "./$tex"
+			echo '\\' >> "$tex"
+			echo '\hline' >> "$tex"
 		done
-		echo '\end{tabular}' >> "./$tex"
-		echo '\end{center}' >> "./$tex"
-		echo >> "./$tex"
+		echo '\end{tabular}' >> "$tex"
+		echo '\end{center}' >> "$tex"
+		echo >> "$tex"
 	done
 fi
 ################################################################################
 
-printf '%79s\n' | tr ' ' '%' >> "./$tex"
-echo >> "./$tex"
-echo '\end{document}' >> "./$tex"
+printf '%79s\n' | tr ' ' '%' >> "$tex"
+echo >> "$tex"
+echo '\end{document}' >> "$tex"
 
 ###############################################################################
