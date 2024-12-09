@@ -94,13 +94,12 @@ done
 
 tex=${pre/.pre/.tex}
 
-(( w4 = 16 / cols ))
-(( w2 = 32 / cols ))
+(( w4 = 15 / cols ))
+(( w2 = w4 * 2 ))
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
     filename=${filename##*/}
-    # filename=${filename^^}
 fi
 
 RANDOM=$seed
@@ -290,7 +289,6 @@ for (( t = 1; t <= $tests; ++t )); do
 
 	echo '\begin{minipage}{0.95\textwidth}' >> "$tex"
 	echo '\begin{center}' >> "$tex"
-#	echo '\renewcommand\arraystretch{1.50}' >> "$tex"
 	echo '\renewcommand\arraystretch{1.45}' >> "$tex"
 	if ((questions <= MAXQ)); then
 ################################################################################
@@ -340,18 +338,23 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo '\end{minipage}' >> "$tex"
 	echo >> "$tex"
 
+################################################################################
+# examen
+################################################################################
+
 	if (( $cols == 2 )); then
-		echo "\begin{multicols}{$cols}" >> "$tex"
+		echo "\begin{multicols}{$cols}" >> "$tex" # inicio de multicols
 	fi
 
-	echo '\begin{enumerate}' >> "$tex" # lista de preguntas
+	echo '\begin{enumerate}' >> "$tex" # inicio de la lista de preguntas
+
 	echo >> "$tex"
 	printf '%79s\n' | tr ' ' '%' >> "$tex"
 	echo >> "$tex"
 
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
-		echo "\item ${p2[$n]}" >> "$tex" # número de pregunta
+		echo "\item ${p2[$n]}" >> "$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
 		for o in "${orden[@]}"; do
@@ -364,6 +367,7 @@ for (( t = 1; t <= $tests; ++t )); do
 		elif (( $width < $w2 )); then
 			echo '\begin{multicols}{2}' >> "$tex"
 		fi
+   		echo "\begin{enumerate}" >> "$tex" # inicio de la lista de respuestas
 		declare -a desorden
 		pos=0
 		for r in `seq 0 3 | shuf`; do
@@ -378,7 +382,6 @@ for (( t = 1; t <= $tests; ++t )); do
 			d) correcta="${d2[$n]}";;
 			*) echo "respuesta incorrecta en ${p2[$n]}"; exit 1;;
 		esac
-		echo "\begin{enumerate}" >> "$tex" # inicio lista de respuestas
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
 			echo "\item $respuesta" >> "$tex"
@@ -391,7 +394,7 @@ for (( t = 1; t <= $tests; ++t )); do
 			fi
 			(( ++pos ))
 		done
-		echo '\end{enumerate}' >> "$tex" # fin lista de respuestas
+		echo '\end{enumerate}' >> "$tex" # fin de la lista de respuestas
 		if (( $width < $w2 )); then
 			echo '\end{multicols}' >> "$tex"
 		fi
@@ -406,15 +409,19 @@ for (( t = 1; t <= $tests; ++t )); do
 		s2=("${s2[@]:0:$n}" "${s2[@]:$(($n + 1))}")
 	done
 
-	echo '\end{enumerate}' >> "$tex"
+	echo '\end{enumerate}' >> "$tex" # fin de la lista de preguntas
 
 	if (( $cols == 2 )); then
-		echo '\end{multicols}' >> "$tex"
+		echo '\end{multicols}' >> "$tex" # fin de multicols
 	fi
 
 	echo "\cleardoublepage $empty" >> "$tex"
 	echo >> "$tex"
 done
+
+################################################################################
+# tabla de respuestas
+################################################################################
 
 printf '%79s\n' | tr ' ' '%' >> "$tex"
 echo '% soluciones' >> "$tex"
