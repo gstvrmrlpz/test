@@ -18,7 +18,7 @@ auto: $(TEX)
 clean:
 	-latexmk -C -f $(TEX)
 	-rm -fv $(PDF) $(TEX) *~
-	-killall -KILL -q inotifywait latexmk
+	-killall -KILL -q inotifywait latexmk || true
 
 ###############################################################################
 
