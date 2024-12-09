@@ -12,12 +12,13 @@ TST = $(shell which test.sh)
 all: $(PDF)
 
 auto: $(TEX)
-	while true; do inotifywait -qr -e modify .; make '$<'; done &
-	latexmk -f -pdf -pvc '$<'
+	latexmk -f -pdf -pvc -shell-escape '$<' && pkill -KILL $$! &
+	while true; do inotifywait -qr -e modify .; make '$<'; done
 
 clean:
-	-[ -e $(TEX) ] && latexmk -C
+	-latexmk -C -f $(TEX)
 	-rm -fv $(PDF) $(TEX) *~
+	-killall -KILL -q inotifywait latexmk
 
 ###############################################################################
 
@@ -25,7 +26,7 @@ clean:
 	$(TST) -c 2 -i logotipos -p '$<' -q 64 -s "Arquitectura de Computadores" -t 3
 
 %.pdf: %.tex
-	latexmk -pdf '$*'
+	latexmk -pdf -shell-escape '$*'
 
 ###############################################################################
 

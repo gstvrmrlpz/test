@@ -344,15 +344,14 @@ for (( t = 1; t <= $tests; ++t )); do
 		echo "\begin{multicols}{$cols}" >> "$tex"
 	fi
 
-	echo '\begin{enumerate}' >> "$tex"
+	echo '\begin{enumerate}' >> "$tex" # lista de preguntas
 	echo >> "$tex"
 	printf '%79s\n' | tr ' ' '%' >> "$tex"
 	echo >> "$tex"
 
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
-		echo "\item ${p2[$n]}" >> "$tex"
-		echo "\begin{enumerate}" >> "$tex"
+		echo "\item ${p2[$n]}" >> "$tex" # número de pregunta
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
 		for o in "${orden[@]}"; do
@@ -379,10 +378,10 @@ for (( t = 1; t <= $tests; ++t )); do
 			d) correcta="${d2[$n]}";;
 			*) echo "respuesta incorrecta en ${p2[$n]}"; exit 1;;
 		esac
+		echo "\begin{enumerate}" >> "$tex" # inicio lista de respuestas
 		for j in a b c d; do
 			respuesta="${desorden[$pos]}"
 			echo "\item $respuesta" >> "$tex"
-#			echo "\item \protect{$respuesta}" >> "$tex" # protecting fragile code
 			if [ "$respuesta" == "$correcta" ]; then
 				if [ "${sol[$t]}" ]; then
 					sol[$t]="${sol[$t]} & $j"
@@ -392,10 +391,10 @@ for (( t = 1; t <= $tests; ++t )); do
 			fi
 			(( ++pos ))
 		done
+		echo '\end{enumerate}' >> "$tex" # fin lista de respuestas
 		if (( $width < $w2 )); then
 			echo '\end{multicols}' >> "$tex"
 		fi
-		echo '\end{enumerate}' >> "$tex"
 		echo >> "$tex"
 		printf '%79s\n' | tr ' ' '%' >> "$tex"
 		echo >> "$tex"
