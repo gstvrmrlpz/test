@@ -94,8 +94,8 @@ done
 
 tex=${pre/.pre/.tex}
 
-(( w4 = 15 / cols ))
-(( w2 = w4 * 2 ))
+(( w4 = 12 / cols )) # max width of 4 columns
+(( w2 = w4 * 2 ))    # max width of 2 columns
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
