@@ -13,12 +13,12 @@ all: $(PDF)
 
 auto: $(TEX)
 	latexmk -f -pdf -pvc -shell-escape '$<' && pkill -KILL $$! &
-	while true; do inotifywait -qr -e modify .; make '$<'; done
+	while ps -q $$! > /dev/null; do inotifywait -qr -e modify .; make '$<'; done
 
 clean:
 	-latexmk -C -f $(TEX)
 	-rm -fv $(PDF) $(TEX) *~
-	-killall -KILL -q inotifywait latexmk || true
+	-killall -KILL -q inotifywait latexmk pdflatex || true
 
 ###############################################################################
 
