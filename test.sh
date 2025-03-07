@@ -415,7 +415,7 @@ for (( t = 1; t <= $tests; ++t )); do
 		echo '\end{multicols}' >> "$tex" # fin de multicols
 	fi
 
-	echo "\cleardoublepage $empty" >> "$tex"
+	echo "\cleardoublepage$empty" >> "$tex"
 	echo >> "$tex"
 done
 
