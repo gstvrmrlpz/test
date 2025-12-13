@@ -185,7 +185,7 @@ cat > "$tex" <<EOF
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\geometry{margin=7mm,top=15mm,bottom=15mm}
+\geometry{left=7mm,right=7mm,top=14mm,bottom=14mm}
 
 \lstset{
 	aboveskip=0pt,
@@ -249,10 +249,6 @@ cat > "$tex" <<EOF
 \vspace{5mm}
 }
 
-\newenvironment{mfigure}
-	{\par\medskip\noindent\minipage{\linewidth}}
-	{\endminipage\par\medskip}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
@@ -287,7 +283,6 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo '\vspace{1mm}' >> "$tex"
 	echo >> "$tex"
 
-	echo '\begin{minipage}{0.95\textwidth}' >> "$tex"
 	echo '\begin{center}' >> "$tex"
 	echo '\renewcommand\arraystretch{1.45}' >> "$tex"
 	if ((questions <= MAXQ)); then
@@ -335,7 +330,6 @@ for (( t = 1; t <= $tests; ++t )); do
 	fi
 	echo '\end{tabular}' >> "$tex"
 	echo '\end{center}' >> "$tex"
-	echo '\end{minipage}' >> "$tex"
 	echo >> "$tex"
 
 ################################################################################
@@ -355,6 +349,7 @@ for (( t = 1; t <= $tests; ++t )); do
 	for (( i=0; i<$questions; ++i )); do
 		n=$(( $RANDOM % ${#p2[@]} ))
 		echo "\item ${p2[$n]}" >> "$tex"
+		echo >> "$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
 		width=0
 		for o in "${orden[@]}"; do
@@ -363,8 +358,10 @@ for (( t = 1; t <= $tests; ++t )); do
 			fi
 		done
 		if (( $width < $w4 )); then
+			echo '\begin{minipage}{\linewidth}' >> "$tex"
 			echo '\begin{multicols}{4}' >> "$tex"
 		elif (( $width < $w2 )); then
+			echo '\begin{minipage}{\linewidth}' >> "$tex"
 			echo '\begin{multicols}{2}' >> "$tex"
 		fi
    		echo "\begin{enumerate}" >> "$tex" # inicio de la lista de respuestas
@@ -397,8 +394,10 @@ for (( t = 1; t <= $tests; ++t )); do
 		echo '\end{enumerate}' >> "$tex" # fin de la lista de respuestas
 		if (( $width < $w2 )); then
 			echo '\end{multicols}' >> "$tex"
+			echo '\end{minipage}' >> "$tex"
 		fi
 		echo >> "$tex"
+
 		printf '%79s\n' | tr ' ' '%' >> "$tex"
 		echo >> "$tex"
 		p2=("${p2[@]:0:$n}" "${p2[@]:$(($n + 1))}")
