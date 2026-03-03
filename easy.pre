@@ -1,0 +1,127 @@
+p pregunta 1: ¿Cuánto es 0 + 0?
+a 0
+b 1
+c 2
+d 3
+s a
+t +
+
+p pregunta 2: ¿Cuánto es 1 + 1?
+a 0
+b 1
+c 2
+d 3
+s c
+t +
+
+p pregunta 3: ¿Cuánto es 2 + 2?
+a 0
+b 2
+c 4
+d 6
+s c
+t +
+
+p pregunta 4: ¿Cuánto es 3 + 3?
+a 0
+b 2
+c 4
+d 6
+s d
+t +
+
+p pregunta 5: ¿Cuánto es 0 - 0?
+a 0
+b 1
+c 2
+d 3
+s a
+t -
+
+p pregunta 6: ¿Cuánto es 1 - 1?
+a 0
+b 1
+c 2
+d 3
+s a
+t -
+
+p pregunta 7: ¿Cuánto es 2 - 2?
+a 0
+b 2
+c 4
+d 6
+s a
+t -
+
+p pregunta 8: ¿Cuánto es 3 - 3?
+a 0
+b 2
+c 4
+d 6
+s a
+t -
+
+p pregunta 9: ¿Cuánto es 0 * 0?
+a 0
+b 1
+c 2
+d 3
+s a
+t *
+
+p pregunta 10: ¿Cuánto es 1 * 1?
+a 0
+b 1
+c 2
+d 3
+s b
+t *
+
+p pregunta 11: ¿Cuánto es 2 * 2?
+a 0
+b 2
+c 4
+d 6
+s c
+t *
+
+p pregunta 12: ¿Cuánto es 3 * 3?
+a 0
+b 2
+c 4
+d 9
+s d
+t *
+
+p pregunta 13: ¿Cuánto es 1 / 1?
+a 0
+b 1
+c 2
+d 3
+s b
+t /
+
+p pregunta 14: ¿Cuánto es 2 / 2?
+a 0
+b 1
+c 2
+d 3
+s b
+t /
+
+p pregunta 15: ¿Cuánto es 3 / 3?
+a 0
+b 1
+c 2
+d 3
+s b
+t /
+
+p pregunta 16: ¿Cuánto es 4 / 4?
+a 0
+b 1
+c 2
+d 3
+s b
+t /
