@@ -15,7 +15,7 @@ image='/home/gustavo/docencia/logotipos'
 MAXQ=20      # answer longest line in number of questions
 MAXT=35      # longest answer table in the short format
 questions=0  # number of questions
-seed=0
+seed=0       # default random seed
 subject=''
 tests=1
 
@@ -27,7 +27,7 @@ help()
 	echo -e "\t -c \t number of columns (1|2), $cols by default"
 	echo -e "\t -d \t today by default, '' to avoid"
 	echo -e "\t -e \t avoid empty pages"
-	echo -e "\t -f \t default test name is the same as the question file"
+	echo -e "\t -f \t latex file, *.pre to *.tex by default"
 	echo -e "\t -h \t show this help"
 	echo -e "\t -i \t image directory {atc,etsiit,ugr}-logo.png"
 	echo -e "\t -p \t question file *.pre, mandatory"
@@ -129,30 +129,33 @@ while read -r clave linea; do
 
 	case $clave in
 		''|'#'*|'%'*) ;;  # avoid empty & commented lines
-		p) p+=("$linea");;
+		p) t[${#p[@]}]="$linenumber"; p+=("$linea");;
 		a) a+=("$linea");;
 		b) b+=("$linea");;
 		c) c+=("$linea");;
 		d) d+=("$linea");;
 		s) s+=("$linea");;
+        t) idx=$((${#p[@]} - 1)); t[$idx]="$linea";;
 		*) echo "error in line $linenumber: \"$clave $linea\""; exit 1;;
 	esac
 
 	(( ++linenumber ));
 done < "$pre"
 
-if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${#d[@]} != ${#p[@]} || ${#s[@]} != ${#p[@]} )); then
-	echo "$(basename $0): number of p, a, b, c, d, s mismatch!!!";
+if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${#d[@]} != ${#p[@]} || ${#s[@]} != ${#p[@]} || ${#t[@]} != ${#p[@]} )); then
+	echo "$(basename $0): number of p, a, b, c, d, s, t mismatch!!!";
 	echo -e "\t \${#p[@]} = ${#p[@]}"
 	echo -e "\t \${#a[@]} = ${#a[@]}"
 	echo -e "\t \${#b[@]} = ${#b[@]}"
 	echo -e "\t \${#c[@]} = ${#c[@]}"
 	echo -e "\t \${#d[@]} = ${#d[@]}"
 	echo -e "\t \${#s[@]} = ${#s[@]}"
+	echo -e "\t \${#t[@]} = ${#t[@]}"
+	# echo -e "\t \${#t[@]} = ${#t[@]} \n\t --> ${!t[@]} \n\t --> ${t[@]}"
 	exit 1
 fi
 
-# all questions by default and no more than maximun
+# all questions by default and no more than the number of questions in file
 if (( questions < 1 )) || (( questions > ${#p[@]} )); then
 	questions=${#p[@]}
 fi
@@ -260,21 +263,60 @@ EOF
 # test loop
 ###############################################################################
 
-for (( t = 1; t <= $tests; ++t )); do
+for (( test_num = 1; test_num <= $tests; ++test_num )); do
 	p2=("${p[@]}")
 	a2=("${a[@]}")
 	b2=("${b[@]}")
 	c2=("${c[@]}")
 	d2=("${d[@]}")
 	s2=("${s[@]}")
+    t2=("${t[@]}")
+
+	# Agrupar preguntas por tipo
+	declare -A questions_by_type
+	for i in "${!p2[@]}"; do
+		tipo="${t2[$i]}"
+		questions_by_type[$tipo]+=" $i "
+	done
+
+	# Array para almacenar índices de preguntas seleccionadas
+	declare -a selected=()
+
+	# Seleccionar preguntas sin repetir tipos hasta que todos se hayan usado
+	while (( ${#selected[@]} < questions )); do
+		# Tipos disponibles en esta ronda (que aún tengan preguntas)
+		available_types=()
+		for tipo in "${!questions_by_type[@]}"; do
+			if [[ -n "${questions_by_type[$tipo]}" ]]; then
+				available_types+=("$tipo")
+			fi
+		done
+
+		# Barajar tipos y seleccionar una pregunta de cada uno
+		for tipo in $(printf '%s\n' "${available_types[@]}" | shuf); do
+			# Convertir string de índices a array
+			read -ra indices <<< "${questions_by_type[$tipo]}"
+
+			if (( ${#indices[@]} > 0 )) && (( ${#selected[@]} < questions )); then
+				# Elegir índice aleatorio del tipo
+				idx=$(( RANDOM % ${#indices[@]} ))
+				pregunta_idx="${indices[$idx]}"
+				selected+=("$pregunta_idx")
+
+				# Remover la pregunta usada
+				unset 'indices[$idx]'
+				questions_by_type[$tipo]="${indices[*]}"
+			fi
+		done
+	done
 
 	printf '%79s\n' | tr ' ' '%' >> "$tex"
-	echo "% test $t" >> "$tex"
+	echo "% test $test_num" >> "$tex"
 	printf '%79s\n' | tr ' ' '%' >> "$tex"
 	echo >> "$tex"
 	echo '\encabezado' >> "$tex"
 	echo >> "$tex"
-	echo "{\Large \bfseries \noindent Test $t: 10 puntos.}" >> "$tex"
+	echo "{\Large \bfseries \noindent Test $test_num: 10 puntos.}" >> "$tex"
 	echo >> "$tex"
 	good=`printf '%2.2f' $(bc -l <<< "10/$questions")`
 	bad=`printf '%2.2f' $(bc -l <<< "10/(3*$questions)")`
@@ -347,7 +389,7 @@ for (( t = 1; t <= $tests; ++t )); do
 	echo >> "$tex"
 
 	for (( i=0; i<$questions; ++i )); do
-		n=$(( $RANDOM % ${#p2[@]} ))
+		n=${selected[$i]}
 		echo "\item ${p2[$n]}" >> "$tex"
 		echo >> "$tex"
 		declare -a orden=("${a2[$n]}" "${b2[$n]}" "${c2[$n]}" "${d2[$n]}")
@@ -383,10 +425,10 @@ for (( t = 1; t <= $tests; ++t )); do
 			respuesta="${desorden[$pos]}"
 			echo "\item $respuesta" >> "$tex"
 			if [ "$respuesta" == "$correcta" ]; then
-				if [ "${sol[$t]}" ]; then
-					sol[$t]="${sol[$t]} & $j"
+				if [ "${sol[$test_num]}" ]; then
+					sol[$test_num]="${sol[$test_num]} & $j"
 				else
-					sol[$t]="$j"
+					sol[$test_num]="$j"
 				fi
 			fi
 			(( ++pos ))
@@ -400,12 +442,6 @@ for (( t = 1; t <= $tests; ++t )); do
 
 		printf '%79s\n' | tr ' ' '%' >> "$tex"
 		echo >> "$tex"
-		p2=("${p2[@]:0:$n}" "${p2[@]:$(($n + 1))}")
-		a2=("${a2[@]:0:$n}" "${a2[@]:$(($n + 1))}")
-		b2=("${b2[@]:0:$n}" "${b2[@]:$(($n + 1))}")
-		c2=("${c2[@]:0:$n}" "${c2[@]:$(($n + 1))}")
-		d2=("${d2[@]:0:$n}" "${d2[@]:$(($n + 1))}")
-		s2=("${s2[@]:0:$n}" "${s2[@]:$(($n + 1))}")
 	done
 
 	echo '\end{enumerate}' >> "$tex" # fin de la lista de preguntas
@@ -444,10 +480,10 @@ if (( questions <= MAXQ )); then
 		echo '\\' >> "$tex"
 		echo "\cline{2-$((questions + 1))}" >> "$tex"
 		echo "\cline{2-$((questions + 1))}" >> "$tex"
-		for (( t = t2; t <= t2 + MAXT - 1 && t <= tests; ++t )); do
-			partial="${sol[$t]}"
+		for (( test_num = t2; test_num <= t2 + MAXT - 1 && test_num <= tests; ++test_num )); do
+			partial="${sol[$test_num]}"
 			position=$(( 4 * (questions -1) + 1 ))
-			echo "$t & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "$tex"
+			echo "$test_num & ${partial:0:$position} \\\\ \cline{2-$((questions + 1))}" >> "$tex"
 		done
 		echo '\end{tabular}' >> "$tex"
 		echo '\end{center}' >> "$tex"
@@ -457,13 +493,13 @@ if (( questions <= MAXQ )); then
 # long
 ################################################################################
 else
-	for (( t = 1; t <= tests; ++t )); do
-		echo "$t" >> "$tex"
+	for (( test_num = 1; test_num <= tests; ++test_num )); do
+		echo "$test_num" >> "$tex"
 		echo '\begin{center}' >> "$tex"
-		echo '\renewcommand\arraystretch{1.45}' >> "$tex"
+		echo '\renewcommand\arraystretch{1.45}' >>"$tex"
 		echo "\begin{tabular}{|*{$MAXQ}{m{${answer}mm}|}}" >> "$tex"
 		echo '\hline' >> "$tex"
-		all=${sol[$t]}
+		all=${sol[$test_num]}
 		for (( maxq = 0; maxq < questions; maxq += MAXQ )); do
 			for (( j = maxq; j < maxq + MAXQ; ++j )); do
 				if (( j < questions )); then
