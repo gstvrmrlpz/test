@@ -17,13 +17,13 @@ auto: $(TEX)
 
 clean:
 	-latexmk -C -f $(TEX)
-	-rm -fv $(PDF) $(TEX) *~
+	-rm -frv $(PDF) $(TEX) _minted-* *~
 	-killall -KILL -q inotifywait latexmk pdflatex || true
 
 ###############################################################################
 
 %.tex: %.pre $(TST) makefile
-	$(TST) -p '$<' -q 12 -s "Asignatura X" -t 3
+	$(TST) -p '$<' -s "Asignatura X" -t 3
 
 %.pdf: %.tex
 	latexmk -pdf -shell-escape '$*'
