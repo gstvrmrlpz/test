@@ -293,7 +293,11 @@ for (( test_num = 1; test_num <= $tests; ++test_num )); do
 		done
 
 		# Barajar tipos y seleccionar una pregunta de cada uno
-		for tipo in $(printf '%s\n' "${available_types[@]}" | shuf); do
+		set -f  # deshabilitar expansión de glob para que * no se expanda
+		shuffled_types=$(printf '%s\n' "${available_types[@]}" | shuf)
+		set +f  # rehabilitar expansión de glob
+		
+		while IFS= read -r tipo; do
 			# Convertir string de índices a array
 			read -ra indices <<< "${questions_by_type[$tipo]}"
 
@@ -303,11 +307,16 @@ for (( test_num = 1; test_num <= $tests; ++test_num )); do
 				pregunta_idx="${indices[$idx]}"
 				selected+=("$pregunta_idx")
 
-				# Remover la pregunta usada
-				unset 'indices[$idx]'
-				questions_by_type[$tipo]="${indices[*]}"
+				# Remover la pregunta usada - reconstruir array sin huecos
+				new_indices=()
+				for i in "${!indices[@]}"; do
+					if (( i != idx )); then
+						new_indices+=("${indices[$i]}")
+					fi
+				done
+				questions_by_type[$tipo]="${new_indices[*]}"
 			fi
-		done
+		done <<< "$shuffled_types"
 	done
 
 	printf '%79s\n' | tr ' ' '%' >> "$tex"
