@@ -2,6 +2,11 @@
 # makefile
 ###############################################################################
 
+SHELL := $(shell which bash)
+.ONESHELL:
+
+###############################################################################
+
 PRE = $(wildcard *.pre)
 TEX = $(PRE:.pre=.tex)
 PDF = $(TEX:.tex=.pdf)
@@ -11,7 +16,7 @@ TST = $(shell which test.sh)
 
 all: $(PDF)
 
-auto: $(TEX)
+%.auto: %.tex
 	latexmk -f -pdf -pvc -shell-escape '$<' && pkill -KILL $$! &
 	while ps -q $$! > /dev/null; do inotifywait -qr -e modify .; make '$<'; done
 
@@ -30,7 +35,7 @@ clean:
 
 ###############################################################################
 
-.PHONY: all auto clean
+.PHONY: all clean
 .NOEXPORT:
 
 ###############################################################################
