@@ -7,7 +7,7 @@ LC_NUMERIC=C
 ###############################################################################
 
 answer='5.0' # width of answer column in mm
-cols=2       # number of columns
+cols=2       # default number of columns
 date=`date  '+%d/%m/%Y'`
 empty='\ifodd\value{page}\cleardoublepage\else\null\cleardoublepage\fi'
 filename=''
@@ -66,7 +66,7 @@ for (( i=0; i<${#args[@]}; ++i )); do
 	esac
 done
 
-if (( cols < 0 || cols > 2 )); then
+if (( cols < 1 || cols > 2 )); then
 	echo "$0: Only 1 or 2 columns supported!"
 	exit 1
 fi
@@ -94,8 +94,8 @@ done
 
 tex=${pre/.pre/.tex}
 
-(( w4 = 12 / cols )) # max width of 4 columns
-(( w2 = w4 * 2 ))    # max width of 2 columns
+(( w4 = 9 / cols )) # max width of 4 columns
+(( w2 = w4 * 2 ))   # max width of 2 columns
 
 if [ -z "$filename" ]; then
 	filename=${tex/.tex}
@@ -155,7 +155,14 @@ if (( ${#a[@]} != ${#p[@]} || ${#b[@]} != ${#p[@]} || ${#c[@]} != ${#p[@]} || ${
 	exit 1
 fi
 
-# all questions by default and no more than the number of questions in file
+# Stop early with a clear error instead of triggering divide-by-zero later.
+if (( ${#p[@]} < 1 )); then
+	echo "$(basename $0): no valid questions found in '$pre'"
+	echo "Expected lines starting with: p, a, b, c, d, s (and optional t)."
+	exit 1
+fi
+
+# If -q is missing/invalid/out of bounds, use all available questions.
 if (( questions < 1 )) || (( questions > ${#p[@]} )); then
 	questions=${#p[@]}
 fi
