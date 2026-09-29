@@ -231,7 +231,7 @@ cat > "$tex" <<EOF
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\setminted{autogobble,breaklines,tabsize=2}
+\setminted{autogobble,breaklines,ignorelexererrors=true,tabsize=2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
