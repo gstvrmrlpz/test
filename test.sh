@@ -162,6 +162,24 @@ if (( ${#p[@]} < 1 )); then
 	exit 1
 fi
 
+# Reject questions with duplicate answer text: the correct answer is matched
+# later by comparing strings, so repeated answers would make the generated
+# solution key ambiguous/wrong.
+for (( i=0; i<${#p[@]}; ++i )); do
+	declare -A seen=()
+	for letra in a b c d; do
+		declare -n valor="$letra"
+		texto="${valor[$i]}"
+		if [[ -n "${seen[$texto]}" ]]; then
+			echo "error in question $((i+1)): duplicate answer \"$texto\" (options ${seen[$texto]} and $letra) in \"${p[$i]}\""
+			exit 1
+		fi
+		seen[$texto]=$letra
+	done
+	unset -n valor
+	unset seen
+done
+
 # If -q is missing/invalid/out of bounds, use all available questions.
 if (( questions < 1 )) || (( questions > ${#p[@]} )); then
 	questions=${#p[@]}
